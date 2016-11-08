@@ -1,0 +1,87 @@
+<template name="agreements">
+    {{#if loadingGroup}}
+    <div class="overlay-loader">
+        <div class="preloader-wrapper center-div small active">
+            <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+    <div class="col l10 offset-l2 m12 s12">
+        <div class="content-right">
+            <h1 class="section-title newsb m-b-20 orange-text">
+                <strong>A</strong>ssessment <strong>M</strong>anagement
+                <a href="javascript:void(0);" class="btn-floating waves-effect waves-light tooltip addTemplate">
+                    <i class="material-icons">add</i>
+                    <span class="tooltiptext">Add New Template</span>
+                </a>
+            </h1>
+            <div class="table-layout">
+                <div class="table-row news">
+                    <ul class="collection table-layout">
+                        <li class="collection-item row row-heading hide-on-small-only">
+                            <div class="status col m2 s12"><strong>Name</strong></div>
+                            <div class="status col m3 s12"><strong>Title</strong></div>
+                            <div class="status col m2 s12"><strong>Category</strong></div>
+                            <div class="status col m3 s12"><strong>Template</strong></div>
+                            <div class="action col m2 s12"><strong>Action</strong></div>
+                        </li>
+                        {{#if agreementsList}}
+                        {{#each agreementsList}}
+                        <li class="collection-item row">
+                            <div class="col-item-mob status col m2 s12 edit_template">
+                                {{agreementName}}
+                            </div>
+                            <div class="col-item-mob status col m3 s12 edit_template">
+                                {{agreementTitle}}
+                            </div>
+                            <div class="col-item-mob status col m2 s12 edit_template">
+                                {{agreementCategory}}
+                            </div>
+                            <div class="col-item-mob status col m3 s12 edit_template">
+                                <!--{{{agreementBody}}}-->
+                            </div>
+                            <div class="action col m2 s12">
+                                <a href="javascript:void(0);" id="{{_id}}" class="editAgreement tooltip">
+                                    <i class="small material-icons">mode_edit</i>
+                                    <span class="tooltiptext">Edit</span>
+                                </a>
+                                <a href="javascript:void(0);" id="{{_id}}" data-status="{{status}}" class="statusAgreement tooltip">
+                                    {{#if status}}
+                                    <i class="small material-icons">done</i>
+                                    {{else}}
+                                    <i class="small material-icons">not_interested</i>
+                                    {{/if}}
+                                    <span class="tooltiptext">Status</span>
+                                </a>
+                                <a href="javascript:void(0);" id="{{_id}}" class="deleteAgreement tooltip">
+                                    <i class="small material-icons">delete</i>
+                                    <span class="tooltiptext">Delete</span>
+                                </a>
+                            </div>
+                        </li>
+                        {{/each}}
+                        {{else}}
+                        <li class="collection-item row" id="no_event">
+                            <div class="col m12 s12 text-capitalize">Not found.
+                            </div>
+                        </li>
+                        {{/if}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="openAgreement" class="modal modal-m ques-modal modal-fixed-footer">  
+        {{> addAgreement}}
+    </div>
+</template>

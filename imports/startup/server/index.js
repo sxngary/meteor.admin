@@ -1,0 +1,10 @@
+import './register-api.js';
+import './useraccounts.js';
+import './reset-password-email.js';
+import './security.js';
+import '../../api/questionnaires/server/methods.js';
+import '../../api/questionnaires/server/publications.js'
+import "../../api/contents/server/methods.js";
+import "../../api/contents/server/publications.js";
+import '../../api/agreements/server/methods.js';
+import "../../api/agreements/server/publications.js";

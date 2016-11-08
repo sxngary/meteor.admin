@@ -1,0 +1,633 @@
+<template name="questionnaire">
+    <div class="col l10 offset-l2 m12 s12">
+        <div class="content-right">
+            <h1 class="section-title">Questionnaire Management</h1>
+            <div class="row">
+                <div class="col s12">
+                    <ul class="tabs">
+                        <li class="tab col s3" id=""><a href="#questionnaireTab">Questionnaire</a></li>
+                        <li class="tab col s3" id=""><a href="#qCategoryTab">Categories</a></li>
+                        <li class="tab col s3" id=""><a href="#qQuestionTab">Questions</a></li>
+                    </ul>
+                    <div class="col s12" id="questionnaireTab">
+                        {{#if activeTab "questionnaires"}}
+                        <div class="row questionnaire-block-rw">
+                            {{#if questionnaireListing}}
+                            <table class="bordered striped highlight centered responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {{#each questionnaireListing}}
+                            <tr style="">
+                                <td><a href="javascript:void(0);" id="{{questionnaireId}}" class="modal-trigger questionnaire">{{title}}</a></td>
+
+                                <td>
+                                    <a href="#" class="icondelete deleteQuestionnaire tooltip" id="del_{{questionnaireId}}"><i class="fa fa-trash-o fa-lg"></i><span class="tooltiptext">Delete</span></a>
+                                    <!--<a href="#" class="iconprint printQuestionnaire tooltip" id="print_{{questionnaireId}}"><i class="fa fa-print fa-lg"></i><span class="tooltiptext">Print</span></a>-->
+                                </td>
+                            </tr>
+                            {{/each}}
+                            </tbody>
+                            </table>
+                            {{else}}
+                            <ul class="collection table-layout">
+                                <li class="collection-item avatar row">
+                                    <div class="col m12 s12 text-capitalize">
+                                        {{#if questionnaireLoaded}} No Questionnaire found. {{else}} Loading... {{/if}}
+                                    </div>
+                                </li>
+                            </ul>
+                            {{/if}}
+                        </div>
+
+                        <div class="row">
+                            <div class="col s12">
+                                <button id="createQuestionnaire" class="btn waves-effect waves-light">Add</button>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="col s12" id="qCategoryTab">
+                        {{#if activeTab "categories"}}
+                        
+                        {{#if displayCategory}} 
+                        <table class="bordered striped highlight centered responsive-table">
+                            <thead>
+                                <tr>
+                                    <th>Parent</th>
+                                    <th>Category</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {{#each displayCategory}}
+                            <tr style="">
+                                <td>-</td>
+                                <td><a href="javascript:void(0);" class="editCategory" id="{{catId}}">
+                                    {{title}}
+                                </a></td>
+
+                                <td>
+                                    <a href="javascript:void(0)" class="deleteQcategory tooltip" id="del_{{catId}}">
+                                        <i class="fa fa-trash"></i>
+                                        <span class="tooltiptext">Delete</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            
+                            {{#each subcat}}
+                            <tr style="">
+                                <td>{{../title}}</td>
+                                <td><a href="javascript:void(0);" class="editCategory" id="{{subCatId}}">
+                                    {{subtitle}}
+                                </a></td>
+
+                                <td>
+                                    <a href="javascript:void(0)" class="deleteQcategory tooltip" id="del_{{subCatId}}">
+                                        <i class="fa fa-trash"></i>
+                                        <span class="tooltiptext">Delete</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                            
+                            {{/each}}
+                            </tbody>
+                        </table>
+                        {{else}}
+                        <div class="row">
+                            <div class="col s12">
+                                <ul class="collection table-layout">
+                                    <li class="collection-item avatar row">
+                                        <div class="col m12 s12 text-capitalize">No Questionnaire categories found.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        {{/if}} 
+                        
+                        <div class="row">
+                        <div class="col s12">
+                            <button id="createQuestionnaireCat" class="btn waves-effect waves-light">Add
+                            </button>
+                        </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="col s12" id="qQuestionTab">
+                        {{#if activeTab "questions"}}
+                        <!-- <div class="col m6 s8 right sortby">
+                            <select class="right">
+                                <option>Show all</option>
+                                <option>Show Active only</option>
+                                <option>Show Deleted only</option>
+                            </select>
+                            </div> -->
+                        <div class="clearfix mb20"></div>
+                        {{#if allCategory}}
+                        <div class="row questions-accordion">
+                            <div class="col l12">
+                                <ul class="collapsible" data-collapsible="accordion">
+                                    {{#each allCategory}}
+                                    <li data-cat-id="{{catId}}" data-cat-index="{{index}}" class="category">
+                                        <div class="collapsible-header" style="background:{{color}}">{{title}}</div>
+                                        <div class="collapsible-body" style="border-left:10px solid {{color}}">
+                                            <ul class="sub-accordion">
+                                                {{#each mainCatQuestion}} {{#unless deleted}}
+                                                <li class="level-{{level}}">
+                                                    <span class="q-title"><a href="javascript:void(0);" class="modal-trigger hierarchy" id="{{questionId}}">{{Qtitle}}</a></span>
+                                                    <a class="arrow deleteQuestion tooltip" id="del_{{questionId}}" data-index="{{../index}}" href="javascript:void(0);"><i class="fa fa-trash"></i><span class="tooltiptext">Delete</span></a>
+                                                </li>
+                                                {{/unless}} {{/each}}
+                                                <ul class="collapsible" data-collapsible="accordion">
+                                                    {{#each subCategory}}
+                                                    <li>
+                                                        <div class="collapsible-header" style="background:{{subcolor}}">{{subtitle}}</div>
+                                                        <div class="collapsible-body" style="border-left:10px solid {{subcolor}}">
+                                                            <ul class="sub-accordion">
+                                                                {{#each subCatquestionData}} {{#unless deleted}}
+                                                                <li class="level-{{level}}">
+                                                                    <span class="q-title"><a href="javascript:void(0);" class="modal-trigger hierarchy" id="{{questionId}}">{{Qtitle}}</a></span>
+                                                                    <a id="del_{{questionId}}" class="arrow deleteQuestion tooltip" data-index="{{../../index}}" href="javascript:void(0);"><i class="fa fa-trash"></i><span class="tooltiptext">Delete</span></a>
+                                                                </li>
+                                                                {{/unless}} {{/each}}
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                    {{/each}}
+                                                </ul>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="row">
+                            <div class="col s12">
+                                <ul class="collection table-layout">
+                                    <li class="collection-item avatar row">
+                                        <div class="col m12 s12 text-capitalize">No Questions found.</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        {{/if}}
+
+                        <div class="row">
+                        <div class="col s12">
+                            <button id="createQuestion" class="btn waves-effect waves-light">Add</button>
+                        </div>
+                        </div>
+                        
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Questionnaire Popup and Form Start -->
+    <div id="questionnairePopup" class="modal modal-m ques-modal modal-fixed-footer">
+        <div class="modal-header light-blue lighten-1">
+            <h4>Questionnaire Builder</h4>
+        </div>
+        <form class="" id="{{#if questionnaireData}}questionnaireUpdate{{else}}questionnaireAdd{{/if}}" name="questionnaireAdd" data-parsley-validate>
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs">
+                            <li class="active resp-tab-item resp-tab-active"><a href="#main">Main</a></li>
+                            {{#if questionnaireData}}
+                            <li><a href="#helper">Helper</a></li>
+                            <li><a href="#questions">Questions</a></li>
+                            <!-- <li>Break-Down</li> -->
+                            {{/if}}
+                        </ul>
+
+                        <div class="active col s12" id="main">
+                            <div class="row">
+                                
+                                <div class="input-field col s12">
+                                    <div class="rowminus">
+                                        <div class="col m8 s12">
+                                            <input type="text" id="title" name="title" value="{{getText questionnaireData.questionnaireTitle}}" required>
+                                            <label class="{{#if questionnaireData}}active{{/if}}" for="title">Title</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-field col s12">
+                                    <div class="rowminus">
+                                        <div class="col m8 s12">
+                                            <input type="text" id="keyString" name="keyString" value="{{getText questionnaireData.keyString}}">
+                                            <label class="{{#if questionnaireData}}active{{/if}}" for="keyString">Strap</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-field col s12">
+                                    <div class="rowminus">
+                                        <div class="col m8 s12">
+                                            <span class=" label-no-position"><label>Summary</label> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-field col s12">
+                                    <div class="rowminus">
+                                        <div class="col m8 s12">
+                                            <textarea id="questionnaireSummary" name="questionnaireSummary" class="materialize-textarea">{{getText questionnaireData.summary "summary"}}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {{#if questionnaireData}}
+                        <div class="col s12" id="helper">
+                            <div class="input-field col s12">
+                                <div class="rowminus">
+                                    <div class="row">
+                                        <span class="label-left col">Helper Text</span>
+                                        <span class="label-right col m10 s12">More information text displayed via "more info" button. Use to explain and clarify elements of this question. Use the edit tools to format the information, upload optimised /images etc.</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-field col s12">
+                                <div class="rowminus">
+                                    <div class="col s12">
+                                        <textarea id="questionnairehelper" name="questionnairehelper" class="text-small">{{getText questionnaireData.helper "helper"}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12" id="questions">
+                            <div class="row questions-accordion">
+                                <div class="col l6 s6">
+                                    <h4 class="accordion-title-sml">Available</h4>
+                                    <ul class="collapsible" data-collapsible="accordion">
+                                        {{#each allCategory}}
+                                        <li data-cat-id="{{catId}}" data-cat-index="{{index}}" class="category">
+                                            <div class="collapsible-header" style="background:{{color}}">{{title}}</div>
+                                            <div class="collapsible-body" style="border-left:10px solid {{color}}">
+                                                <ul class="sub-accordion">
+                                                    {{#each mainCatQuestion}}
+                                                    <li class="level-{{level}}">
+                                                        <span class="q-title">{{Qtitle}}</span>
+                                                        <a class="arrowadd lvl-{{level}} tooltip" id="{{questionId}}" data-index="{{../index}}" href="javascript:void(0);"><i class="fa fa-angle-right"></i>
+                                                        <span class="tooltiptext">Add</span>
+                                                        </a>
+                                                    </li>
+                                                    {{/each}}
+                                                    <ul class="collapsible" data-collapsible="accordion">
+                                                        {{#each subCategory}}
+                                                        <li>
+                                                            <div class="collapsible-header" style="background:{{subcolor}}">{{subtitle}}</div>
+                                                            <div class="collapsible-body" style="border-left:10px solid {{subcolor}}">
+                                                                <ul class="sub-accordion">
+                                                                    {{#each subCatquestionData}}
+                                                                    <li class="level-{{level}}">
+                                                                        <span class="q-title">{{Qtitle}}</span>
+                                                                        <a id="{{questionId}}" class="arrowadd lvl-{{level}} tooltip" data-index="{{../../index}}" href="javascript:void(0);"><i class="fa fa-angle-right"></i>
+                                                                            <span class="tooltiptext">Add</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    {{/each}}
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                        {{/each}}
+                                                    </ul>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                                <div class="col l6 s6">
+                                    <h4 class="accordion-title-sml">Selected</h4>
+                                    <ul class="collapsible" data-collapsible="accordion" id="selectedQues">
+                                        {{#each questionDrop}}
+                                        <li>
+                                            <div class="collapsible-header" style="background:{{parentCatColor}}">{{parentCat}}</div>
+                                            <div class="collapsible-body" style="border-left:10px solid {{parentCatColor}}">
+                                                <ul class="sub-accordion">
+                                                    {{#each mainCatQuestion}}
+                                                    <li class="level-{{level}}">
+                                                        <span class="q-title">{{Qtitle}}</span>
+                                                        <a class="arrowremove tooltip" href="javascript:void(0);" qs-id="{{questionId}}"><i class="fa fa-angle-left"></i>
+                                                        <span class="tooltiptext">Remove</span>
+                                                        </a>
+                                                    </li>
+                                                    {{/each}} {{#if subCategory}} {{#each subCategory}}
+                                                    <ul class="collapsible" data-collapsible="accordion">
+                                                        <li>
+                                                            <div class="collapsible-header" style="background:{{subCatColor}}">{{subCatTitle}}</div>
+                                                            <div class="collapsible-body" style="border-left:10px solid {{subCatColor}}">
+                                                                <ul class="sub-accordion">
+                                                                    {{#each SubcatQuestions}}
+                                                                    <li class="level-{{level}}">
+                                                                        <span class="q-title">{{Qtitle}}</span>
+                                                                        <a class="arrowremove tooltip" href="javascript:void(0);" qs-id="{{questionId}}"><i class="fa fa-angle-left"></i>
+                                                                        <span class="tooltiptext">Remove</span>
+                                                                        </a>
+                                                                    </li>
+                                                                    {{/each}}
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                    {{/each}} {{/if}}
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn waves-effect waves-light" type="submit" name="action">   Save <i class="mdi-content-send right"></i></button>
+                <a href="javascript:void(0);" id="questionnaireClose" class="modal-close modal-action waves-effect waves-green btn-flat">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <!-- Questionnaire Popup and Form End -->
+    <!-- Category Popup and Form Start -->
+    <div id="categoriesPopup" class="modal modal-m ques-modal modal-fixed-footer">
+        <form class="" id="questionnaireCatAdd" name="questionnaireCatAdd" data-parsley-validate>
+            <div class="modal-header light-blue lighten-1">
+                <h4>Category Builder</h4>
+            </div>
+            <div class="modal-content">
+                
+                <div class="row">
+                    <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col s8">
+                                <select name="parent" id="parent">
+                                <option value="0" {{isSelect 0 questionnaireCatValue.parent}}>No Parent</option>
+                                {{#each categoryList}}
+                                <option value="{{_id}}" {{isSelect _id questionnaireCatValue.parent}}>{{cat_name}}{{intializeselect}}</option>
+                                {{/each}} 
+                                </select>
+                                <label class="active">Parent</label>
+                            </div>
+                            <div class="col s4">
+                                <a class="tooltip"><i class="mdi-action-info-outline"></i>
+                                <span class="tooltiptext">If this is a top level Category, leave as [No Parent]</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col s8">
+                                <input type="text" id="cat_name" name="cat_name" value="{{getText questionnaireCatValue.catName}}" required>
+                                <label class="{{#if sessionCheck}} active {{/if}}" for="name">Name</label>
+                            </div>
+                            <div class="col s4">
+                                <a class="tooltip"><i class="mdi-action-info-outline"></i>
+                                <span class="tooltiptext">Category name. e.g. Lifestyle</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col s8">
+                                <textarea id="summary" name="summary" class="materialize-textarea">{{getText questionnaireCatValue.catSummary}}</textarea>
+                                <label for="title" class="active">Summary</label>
+                            </div>
+                            <div class="col s4">
+                                <a class="tooltip" data-position="bottom" data-delay="50" data-tooltip="">
+                                    <i class="mdi-action-info-outline"></i>
+                                    <span class="tooltiptext">Summary information displayed by from help button.</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col m8 s8">
+                                <span class="color-left">Colour</span>
+                                <span class="color-right">
+                                <input type="text" id="cat_color" class="minicolors" name="cat_color" value="{{questionnaireCatValue.detail.cat_color}}" required>
+                                </span>
+                            </div>
+                            <div class="col s4">
+                                <a class="tooltip"><i class="mdi-action-info-outline"></i>
+                                <span class="tooltiptext">#hex colour associated with this category</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col m8 s8">
+                                <span class="color-left">Question Colour</span>
+                                <span class="color-right">
+                                <input type="text" id="question_color" class="minicolors" name="question_color" value="{{questionnaireCatValue.detail.question_color}}">
+                                </span>
+                                <!--  <label for="cat_color">Question Colour</label> -->
+                            </div>
+                            <div class="col s4">
+                                <a class="tooltip"><i class="mdi-action-info-outline"></i>
+                                <span class="tooltiptext">#hex colour associated with this category</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{#if sessionCheck}}
+                <div class="row">
+                    <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="row">
+                                <span class="label-left col">Helper Text</span>
+                                <span class="label-right col m10 s12">More information text displayed via "more info" button. Use to explain and clarify elements of this question. Use the edit tools to format the information, upload optimised /images etc.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col s12">
+                                <textarea id="helper" name="helper" class="text-small">{{getText questionnaireCatValue.catHelper "catHelper"}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+            <div class="modal-footer">
+                <button class="btn waves-effect waves-light" type="submit" name="action">   Save <i class="mdi-content-send right"></i></button>
+                <a href="#" id="questionnaireCatClose" class="modal-close modal-action waves-effect waves-green btn-flat">Cancel</a>
+            </div>
+        </form>
+    </div>
+    <!-- Category Popup and Form End -->
+    <!-- Question Popup and Form Start -->
+    <div id="questionPopup" class="modal modal-m ques-modal modal-fixed-footer" style="">
+        <div class="">
+            <div class="modal-header light-blue lighten-1">
+                <h4>Question Builder</h4>
+            </div>
+            <form class="" id="questionAdd" name="questionAdd" data-parsley-validate>
+                <div class="modal-content">
+                    <div class="horizontalTab">
+                        <ul class="resp-tabs-list">
+                            <li id="firstQuestionTab" class="active resp-tab-item resp-tab-active">Main</li>
+                        </ul>
+                        <div class="resp-tabs-container">
+                            <div id="firstTabCont" class="active resp-tab-content resp-tab-content-active">
+                                <div class="row">
+                                    <div class="col m8 s12">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <div class="rowminus">
+                                                    <div class="col m8 s12">
+                                                        <select name="questionCategory" id="questionCategory" required>
+                                                            <option value="" selected>Select Category</option>
+                                                            {{#each displayCategory}}
+                                                            <option {{isSelect catId questionUpdation.category}} value="{{catId}}">{{title}}</option>
+                                                            {{#each subcat}}
+                                                            <option {{isSelect subCatId questionUpdation.category}} value="{{subCatId}}">....{{subtitle}}</option>
+                                                            {{/each}}
+                                                            {{intializeselect "#questionCategory"}}
+                                                            {{/each}}
+                                                        </select>
+                                                        <label class="active">Category</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="input-field col s12">
+                                                <div class="rowminus">
+                                                    <div class="col m12 s12">
+                                                        <select name="dependency" id="dependency" required>
+                                                            <option value="null" selected>Primary Question</option>
+                                                            {{#if questionSet}}
+                                                            {{#each questionSet}}
+                                                            <option {{isSelect questionId questionUpdation.depQuestion}} value="{{questionId}}">{{dotted level}} {{Qtitle}}</option>
+                                                            {{intializeselect "#dependency"}}
+                                                            {{/each}}
+                                                            {{/if}}
+                                                        </select>
+                                                        <label class="active" for="title">Dependency Question </label>
+                                                    </div>
+                                                    <!--  <div class="col m4 s12 s-mb20-mob">
+                                                        <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip=" Select dependency question if only display upon an answer from a previous question e.g. Requires Yes to vigorous exercise. Otherwise leave as Primary Question "><i class="mdi-action-info-outline"></i></a>
+                                                        </div> -->
+                                                </div>
+                                            </div>
+                                            {{#if answerSet}}
+                                            <div class="input-field col s12">
+                                                <div class="rowminus">
+                                                    <div class="col m12 s12">
+                                                        <!-- <select name="dependencyAns" id="dependencyAns" multiple required>
+                                                            <option value="" selected>Select Answer</option>
+                                                             {{#each answerSet}}
+                                                               <option {{isSelect ansId questionUpdation.depAnswer}} value="{{ansId}}">{{ansLbl}}</option>
+                                                             {{/each}}
+                                                            </select> -->
+                                                        <span class="col label-no-position"><label>Dependency Answer</label> </span>
+                                                        <select id="dependencyAns" name="dependencyAns" style="font-family:Arial;height:166.8px;" multiple="" class="default-select browser-default form-control">
+                                                        {{#each answerSet}}
+                                                        <option {{checkedDependentAnswer ansId}} value="{{ansId}}" style="color:green;">
+                                                        {{getText ansLbl}}
+                                                        {{intializeselect "#dependencyAns"}}
+                                                        </option>
+                                                        {{/each}}
+                                                        </select>
+                                                    </div>
+                                                    <!--  <div class="col m4 s12 s-mb20-mob">
+                                                        <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip=" Select dependency question if only display upon an answer from a previous question e.g. Requires Yes to vigorous exercise. Otherwise leave as Primary Question "><i class="mdi-action-info-outline"></i></a>
+                                                        </div> -->
+                                                </div>
+                                            </div>
+                                            {{/if}}
+                                            <div class="input-field col s12">
+                                                <div class="rowminus">
+                                                    <div class="col m12 s12">
+                                                        <textarea id="questionDef" name="questionDef" class="materialize-textarea" required>{{questionUpdation.questionDef}}</textarea>
+                                                        <label for="title" class="{{#if questionSession}}active{{/if}}">Question</label>
+                                                    </div>
+                                                    <!--  <div class="col m4 s12 s-mb20-mob">
+                                                        <a href="#"><i class="fa fa-language fa-lg"></i></a>
+                                                        
+                                                        </div> -->
+                                                </div>
+                                            </div>
+                                            <div class="input-field col s12">
+                                                <div class="rowminus">
+                                                    <div class="col m12 s12">
+                                                        <select disabled="{{#unless canEditQuesType}}disabled{{/unless}}" id="element_type" name="element_type">
+                                                        {{#if editQuesType}}
+                                                        {{#each editQuesType}}
+                                                        <option {{isSelect value questionUpdation.questionType}} value="{{value}}" >{{title}}</option>
+                                                        {{/each}}
+                                                        {{else}}
+                                                        {{#each questionType}}
+                                                        <option {{isSelect value questionUpdation.questionType}} value="{{value}}" >{{title}}</option>
+                                                        {{/each}}
+                                                        {{#if questionType}}
+                                                        {{intializeselect "#element_type"}}
+                                                        {{/if}}
+                                                        {{/if}}
+                                                        </select>
+                                                        <label class="active" for="title">Element Type</label>
+                                                    </div>
+                                                    <div class="col m4 s12 s-mb20-mob">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="input-field col s12">
+                                                <div class="rowminus">
+                                                    <div class="col m12 s12">
+                                                        <select id="gender" name="gender">
+                                                        <option {{isSelect 0 questionUpdation.gender}} value="0">Male & Female</option>
+                                                        <option {{isSelect 2 questionUpdation.gender}} value="2">Male</option>
+                                                        <option {{isSelect 1 questionUpdation.gender}} value="1">Female</option>
+                                                        </select>                                                        {{intializeselect "#gender"}}
+                                                        <label class="active" for="title">Gender</label>
+                                                    </div>
+                                                    <!-- <div class="col m4 s12 s-mb20-mob">
+                                                        <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="If gender specific question select gender, else leave as Male & Female"><i class="mdi-action-info-outline"></i></a>
+                                                        </div> -->
+                                                </div>
+                                            </div>
+                                            <div class="input-field col s12">
+                                                <div class="rowminus">
+                                                    <div class="col m12 s12">
+                                                        <input type="text" name="key_string" id="key_string" value="{{questionUpdation.key_string}}" required data-parsley-validation-minlength="1"
+                                                            data-parsley-trigger="keyup" data-parsley-keystring="true" data-parsley-keystring_uniq="true"
+                                                        />
+                                                        <label class="{{#if questionUpdation}}active{{/if}}" for="title">Question Variable Name</label>
+                                                    </div>
+                                                    <div class="col m4 s12 s-mb20-mob">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Category Box for question Start -->
+                                    <!-- Category box for question End -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn waves-effect waves-light" type="submit" name="action">   Save <i class="mdi-content-send right"></i></button>
+                    <a href="#" id="questionClose" class="modal-close modal-action waves-effect waves-green btn-flat">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Question Popup and Form End -->
+</template>

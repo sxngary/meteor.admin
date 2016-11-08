@@ -1,0 +1,83 @@
+/* Tooltip container */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    /*border-bottom: 1px dotted black;*/ /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #005c88;
+    color: #fff;
+    text-align: center;
+    padding: 3px 0;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+    position: absolute;
+    z-index: 1;
+    min-width: 80px;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -60px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.table .tooltip .tooltiptext,
+.dataTable .tooltip .tooltiptext
+ {
+    visibility: hidden;
+    background-color: #005c88;
+    color: #fff;
+    text-align: center;
+    padding: 3px 0;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -o-border-radius: 3px;
+ 
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+    min-width: 92px;
+    top: 100%;
+    bottom: auto;
+    left: auto;
+    right:0; 
+    margin-left: 0px; /* Use half of the width (120/2 = 60), to center the tooltip */
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+.table tr .tooltip .tooltiptext,
+.dataTable tr .tooltip .tooltiptext
+{
+bottom: auto;
+top: 100%; 
+}
+.table tr:last-child .tooltip .tooltiptext,
+.dataTable tr:last-child .tooltip .tooltiptext{
+bottom: 100%;
+top: auto; 
+}
+
+.table tr.searched-td-item .tooltip .tooltiptext,
+.dataTable tr.searched-td-item .tooltip .tooltiptext
+ {
+    bottom: auto;
+    top: 0;
+    right: 100%;
+}
+.collection.table-layout li:last-child .tooltip .tooltiptext{
+bottom:100%;
+top:auto;
+}
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

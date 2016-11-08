@@ -1,0 +1,64 @@
+<template name="addAgreement">
+    <div class="">
+        <div class="modal-header light-blue lighten-1">
+            <h5>Create Agreements Template</h5>
+        </div>
+        <form id="frmAgreement" name="frmAgreement" data-parsley-validate>
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col m12">
+                        <div class="row">
+                            <div class="col s1 stepno">1</div>
+                            <div class="input-field col m8 mt40">
+                                <input type="text" name="agreement_name" id="agreement_name" value="{{agreementData.agreementName}}" required >
+                                <label for="agreement_name" class="{{#if agreementData}} active {{/if}}">Agreement name</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m12">
+                        <div class="row">
+                            <div class="col s1 stepno">2</div>
+                            <div class="input-field col m8 mt40">
+                                <input type="text" name="agreement_title" id="agreement_title" value="{{agreementData.agreementTitle}}" required>
+                                <label for="agreement_title" class="{{#if agreementData}} active {{/if}}">Agreement Title</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m12">
+                        <div class="row">
+                            <div class="col s1 stepno">3</div>
+                            <div class="input-field col m8 mt40">
+                                <input type="text" name="agreement_category" id="agreement_category" value="{{agreementData.agreementCategory}}" required>
+                                <label for="agreement_category" class="{{#if agreementData}} active {{/if}}">Agreement Category</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m12">
+                        <div class="row">
+                            <div class="col s1 stepno">4</div>
+                            <div class="input-field col m8 mt40">
+                                <label for="body" class="mb20 setted">Agreement Body</label>
+                                <textarea id="agreement_body" name="agreement_body" class="text-small" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn waves-effect waves-light" type="submit" name="action">
+                {{#if agreementData}} Update {{else}} Save {{/if}} & Exit
+                <i class="mdi-content-send right"></i>
+                </button>
+                <div id="closeTempModal" class="modal-action waves-effect waves-green btn-flat btn-default">
+                    Cancel
+                </div>
+            </div>
+        </form>
+    </div>
+</template>

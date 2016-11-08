@@ -1,0 +1,589 @@
+<template name="questionForm">
+
+<div class="col l10 offset-l2 m12 s12">
+  <div class="content-right">
+    <h1 class="section-title">Update Question</h1>
+    <div class="demo">
+      <p>Please wait until data is loaded...</p>
+      <!--<p><span id="openModal" style="cursor:pointer;text-decoration:underlined;">Click here</span> to open form if it isn't open.</p>-->
+    </div>
+  </div>
+</div>
+
+<!-- Question Popup and Form Start -->
+<div id="questionPopup" class="modal modal-m ques-modal modal-fixed-footer" style="">
+  <div class="">  
+    <div class="modal-header light-blue lighten-1">
+       <h4>Question Builder</h4>
+    </div>
+    <form class="" id="{{#if questionSession}}questionUpdate{{else}}questionAdd{{/if}}" name="questionAdd" data-parsley-validate >
+    <div class="modal-content">
+      {{#if formSubmitted}}
+        <span style="background-color: #FFA07A;
+        padding: 5px;
+        text-align: center;
+        width: 200px;
+        position: fixed;
+        right: 45%;">Please wait, saving data...</span>
+      {{/if}}
+      <div class="horizontalTab">
+          <ul class="resp-tabs-list">
+              <li id="firstQuestionTab" class="active resp-tab-item resp-tab-active">Main</li>
+              
+             
+              <li id="secondQuestionTab">{{#if questionSession}}Answers {{/if}}</li>
+               <li id="thirdQuestionTab" class="">{{#if questionSession}} Helper {{/if}}</li>
+               <li id="fourthQuestionTab" class="">{{#if questionSession}} Break-Down {{/if}}</li>
+               <li id="fifthQuestionTab" class="">{{#if questionSession}} Risk Ratio {{/if}}</li>
+             
+          </ul>
+          <div class="resp-tabs-container">
+            <div id="firstTabCont" class="active resp-tab-content resp-tab-content-active">
+                <div class="row">
+                <div class="col m8 s12">
+                  <div class="row">
+
+                      <div class="input-field col s12">
+                        <div class="rowminus">
+                          <div class="col m8 s12">
+                          
+                            {{#if languages}}
+                            <select id="lang" name="lang" class="" required>
+                              <option value="" disabled>Choose Language</option>
+                              {{#each languages}}
+                              <option value="{{code}}" {{isSelect code selLang}}>{{title}}</option>
+                              {{/each}}
+                            </select>
+                            {{intializeselect "#lang"}}
+                            {{/if}}
+
+                            <label for="lang" class="active" >Language </label>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="input-field col s12">
+                         <div class="rowminus">
+                          <div class="col m8 s12">
+                              {{#if questionUpdation}}
+
+                                <select name="questionCategory" id="questionCategory" required>
+                                  <option value="" selected>Select Category</option>
+                                   {{#each displayCategory}}
+                                      <option {{isSelect catId questionUpdation.category}} value="{{catId}}">{{title}}</option>
+                                       {{#each subcat}}
+                                       <option {{isSelect subCatId questionUpdation.category}} value="{{subCatId}}">....{{subtitle}}</option>
+                                       {{/each}}
+
+                                       {{intializeselect "#questionCategory"}}
+                                   {{/each}}
+                                </select>
+
+                              {{/if}}
+                              <label class="active">Category</label>
+                          </div>
+                         </div>
+                      </div>
+                      
+                      <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col m12 s12">
+                                <select name="dependency" id="dependency" required>
+                                    <option value="null" selected>Primary Question</option>
+                                    {{#if questionSet}}
+                                    {{#each questionSet}}
+                                      <option {{isSelect questionId questionUpdation.depQuestion}} value="{{questionId}}">{{dotted level}} {{Qtitle}}</option>
+
+                                      {{intializeselect "#dependency"}}
+                                    {{/each}}
+                                    {{/if}}
+                                  </select>
+                                <label class="active" for="title">Dependency Question </label>
+                            </div>
+                            <!--  <div class="col m4 s12 s-mb20-mob">
+                                    
+                                    <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip=" Select dependency question if only display upon an answer from a previous question e.g. Requires Yes to vigorous exercise. Otherwise leave as Primary Question "><i class="mdi-action-info-outline"></i></a>
+                             </div> -->
+                        </div>
+                      </div>
+                      {{#if answerSet}}
+                      <div class="input-field col s12">
+                        <div class="rowminus">
+                            <div class="col m12 s12">
+                                <!-- <select name="dependencyAns" id="dependencyAns" multiple required>
+                                   <option value="" selected>Select Answer</option>
+                                    {{#each answerSet}}
+                                      <option {{isSelect ansId questionUpdation.depAnswer}} value="{{ansId}}">{{ansLbl}}</option>
+                                    {{/each}}
+                                  </select> -->
+                                  <span class="col label-no-position"><label>Dependency Answer</label> </span>
+                                  <select id="dependencyAns" name="dependencyAns" style="font-family:Arial;height:166.8px;" multiple="" class="default-select browser-default form-control">
+                                      {{#each answerSet}}
+                                          <option {{checkedDependentAnswer ansId}} value="{{ansId}}" style="color:green;">
+                                              {{getText ansLbl}}
+                                          </option>
+
+                                          {{intializeselect "#dependencyAns"}}
+                                     {{/each}}
+                                  </select>
+                                
+                            </div>
+                            <!--  <div class="col m4 s12 s-mb20-mob">
+                                    
+                                    <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip=" Select dependency question if only display upon an answer from a previous question e.g. Requires Yes to vigorous exercise. Otherwise leave as Primary Question "><i class="mdi-action-info-outline"></i></a>
+                             </div> -->
+                        </div>
+                      </div>
+                      {{/if}}
+                      <div class="input-field col s12">
+                          <div class="rowminus">
+                            <div class="col m12 s12">
+                                <textarea id="questionDef" name="questionDef" class="materialize-textarea" required>{{getText questionUpdation.questionDef}}</textarea>
+                                <label for="title" class="{{#if questionSession}}active{{/if}}">Question</label>
+                            </div>
+                           <!--  <div class="col m4 s12 s-mb20-mob">
+                                <a href="#"><i class="fa fa-language fa-lg"></i></a>
+                               
+                            </div> -->
+                          </div>
+                      </div>
+                      
+                      <div class="input-field col s12">
+                          <div class="rowminus"> 
+                            <div class="col m12 s12">
+                                
+                                <select id="element_type" name="element_type" >
+                                  {{#if editQuesType}}
+
+                                  {{#each editQuesType}}
+                                  <option {{isSelect value questionUpdation.questionType}} value="{{value}}" >{{title}}</option>
+                                  {{intializeselect "#element_type"}}
+                                  {{/each}}
+
+                                  {{else}}
+
+                                  {{#each questionType}}
+                                    {{#if equalVal value questionUpdation.questionType}}
+                                    <option {{isSelect value questionUpdation.questionType}} value="{{value}}" >{{title}}</option>
+                                    {{intializeselect "#element_type"}}
+                                    {{/if}}
+                                  {{/each}}
+                                  
+                                  {{#each dataElement}}
+                                    {{#if equalVal _id questionUpdation.questionType}}
+                                    <option {{isSelect _id questionUpdation.questionType}} value="{{_id}}">{{contentText title}}</option>
+                                    {{intializeselect "#element_type"}}
+                                    {{/if}}
+                                  {{/each}}
+
+                                  {{/if}}
+
+                                </select>
+                                
+                                <label class="active" for="title">Element Type</label>
+                            </div>
+                            <div class="col m4 s12 s-mb20-mob">
+                                
+                            </div>
+                          </div>
+                      </div>
+                      
+                      <div class="input-field col s12">
+                          <div class="rowminus">
+                            <div class="col m12 s12">
+                                <select id="gender" name="gender">
+                                    <option {{isSelect 0 questionUpdation.gender}} value="0">Male & Female</option>
+                                    <option {{isSelect 2 questionUpdation.gender}} value="2">Male</option>
+                                    <option {{isSelect 1 questionUpdation.gender}} value="1">Female</option>
+                                  </select>
+                                  {{intializeselect "#gender"}}
+                                <label class="active" for="title">Gender</label>
+                            </div>
+                            <!-- <div class="col m4 s12 s-mb20-mob">
+                                    
+                                    <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="If gender specific question select gender, else leave as Male & Female"><i class="mdi-action-info-outline"></i></a>
+                          </div> -->
+                          </div>
+                      </div>
+                      
+                      <div class="input-field col s12">
+                          <div class="rowminus">
+                            <div class="col m12 s12">
+                                <input type="text" name="key_string" id="key_string" value="{{questionUpdation.key_string}}" required data-parsley-validation-minlength="1" data-parsley-trigger="keyup" data-parsley-keystring="true" data-parsley-keystring_uniq="true" />
+                                <label class="{{#if questionUpdation}}active{{/if}}" for="title">Question Variable Name</label>
+                            </div>
+                            <div class="col m4 s12 s-mb20-mob">
+                               
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <!-- Category Box for question Start -->
+                  
+                <!-- Category box for question End -->
+                </div>
+            </div>
+
+            <div class="answer" id="secondTabCont">
+              {{#if questionSession}}
+              <div class="row form-group text-black">
+                <div class="col s12">
+                  <div class="input-field label-left col l2 m6 s12">Answer</div>
+                  {{#if questionUpdation}}
+                  <div class="input-field label-right col l10 m6 s12"><p>{{getText questionUpdation.categoryName}} >> <a href="">{{getText questionUpdation.questionDef}}</a></p>
+                    {{#each questionType}}
+                        {{#if equalVal value questionUpdation.questionType}}
+                        <p>{{title}}</p>
+                        {{/if}}
+                      {{/each}}
+                  </div>
+                  {{else}}
+                  <div class="input-field label-right col l10 m6 s12"><p>{{getText questionVal.questionCat}} >> <a href="">{{getText questionVal.questionDef}}</a></p>
+                    {{#each questionType}}
+                        {{#if equalVal value questionVal.type}}
+                        <p>{{title}}</p>
+                        {{/if}}
+                      {{/each}}
+                  </div>
+                  {{/if}}
+                </div>
+              </div>
+                {{#each responseAnswer}}
+                  <div class="row" style="{{#if deleted}} display:none;{{/if}}">{{questionSessVal}}
+                     <div class="col s12">
+                        <div class="input-field col s12">
+                                <div class="row rowminus">
+                                     <div class="col l2 custom-label">New Answer {{index}}</div>
+                                     <div class="col m2 s12">
+                                          <input type="text" name="answerText_{{index}}" id="answerText_{{index}}" value="{{getText ansLbl}}">
+                                          <label class="{{#if responseAnswer}}active{{/if}}">Enter answer text</label>
+                                      </div>
+                                      <div class="col m2 s12">
+                                          <input type="text" name="answerValue_{{index}}" id="answerValue_{{index}}" value="{{getText ansVal}}">
+                                          <label class="{{#if responseAnswer}}active{{/if}}">Enter answer value</label>
+                                      </div>
+                                      <div class="col m2 s12">
+                                          <input type="text" name="answerRank_{{index}}" id="answerRank_{{index}}" value="{{ansRank}}">
+                                          <label class="{{#if responseAnswer}}active{{/if}}">Sort order</label>
+                                      </div>
+                                      {{#if equalVal 8 questionVal.type}}
+                                      <div class="col m2 s12">
+                                        <input type="radio" id="answerResetOthers_{{index}}" name="answerResetOthers" value="{{index}}" checked="{{#if equalVal index questionUpdation.resetOptionsIndex}}checked{{/if}}" />
+                                        <label for="answerResetOthers_{{index}}">None Option</label>
+                                      </div>
+                                      {{/if}}
+                                      <div class="col m2 s12">
+                                          <span id="delAns_{{index}}" class="delete deleteAnswer tooltip" style="cursor:pointer;"><i class="fa fa-trash-o"></i>
+                                          <span class="tooltiptext">Delete</span>
+                                          </span>
+                                      </div>
+                                </div>
+                               
+                           </div>
+                     </div>
+                  </div>
+                {{/each}}
+                <div class="row">
+                <!-- if question element type radio, selectbox or multiple select #Start-->
+                {{#if equalVal 4 questionVal.type}}
+                <div class="addanswer col l8 offset-l2"><span id="addAnswer" style="color:#039be5;cursor:pointer;"><i class="fa fa-plus-circle fa-lg"></i> Add another answer</span></div>
+                {{/if}}
+                {{#if equalVal 5 questionVal.type}}
+                <div class="addanswer col l8 offset-l2"><span id="addAnswer" style="color:#039be5;cursor:pointer;"><i class="fa fa-plus-circle fa-lg"></i> Add another answer</span></div>
+                {{/if}}
+                {{#if equalVal 8 questionVal.type}}
+                <div class="addanswer col l8 offset-l2"><span id="addAnswer" style="color:#039be5;cursor:pointer;"><i class="fa fa-plus-circle fa-lg"></i> Add another answer</span></div>
+                {{/if}}
+                <!-- if question element type radio, selectbox or multiple select #End-->
+              </div>
+              {{/if}}
+            </div>
+
+            <div class="row" id="thirdTabCont">
+               {{#if questionSession}}
+                   <div class="input-field col s12">
+                       <div class="rowminus">
+                        <div class="row">
+                            <span class="label-left col">Helper Text</span>
+                           <!--  <span class="label-right col m10 s12">More information text displayed via "more info" button. Use to explain and clarify elements of this question. Use the edit tools to format the information, upload optimised /images etc.</span> -->
+                        </div>
+                       </div>
+                  </div>
+                   <div class="input-field col s12">
+                        <div class="rowminus">
+                          <div class="col s12">
+                              <textarea id="questionHelper" name="questionHelper" class="text-small">{{getText questionVal.helper "quesHelper"}}</textarea>
+                          </div>
+                          
+                        </div>
+                    </div>
+                    {{/if}}
+            </div>
+
+            <div class="row" id="fourthTabCont">
+              <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Section</div>
+                  <div class="input-field label-right col l8 m6 s12">{{getText questionUpdation.categoryName}}</div>
+              </div>
+              
+              {{#if questionBreakdown.questionArr.depQuestion}}
+              <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Dependency Question</div>
+                  <div class="input-field label-right col l8 m6 s12">{{questionBreakdown.depQuestion}}</div>
+              </div>
+              <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Dependency Answer</div>
+                  <div class="input-field label-right col l8 m6 s12">
+                    <div class="row rowminus">
+                      {{#each questionBreakdown.dependencyAnswer}}
+                      <div class="col l12 s12">{{depAns}}</div>
+                      {{/each}}
+                    </div>
+                </div>
+              </div>
+              {{/if}}
+              <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Question</div>
+                  <div class="input-field label-right col l8 m6 s12">{{getText questionUpdation.questionDef}}</div>
+              </div>
+              <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Element Type</div>
+                  <div class="input-field label-right col l8 m6 s12">
+                    {{#each questionType}}
+                      {{#if equalVal value questionVal.type}}
+                      <p>{{title}}</p>
+                      {{/if}}
+                    {{/each}}
+                  </div>
+              </div>
+              <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Answer</div>
+                  <div class="input-field label-right col l8 m6 s12">
+                    <div class="row rowminus">
+                        {{#each responseAnswer}}
+                        <div class="col l12 s12">{{getText ansLbl}}</div>
+                        {{/each}}
+                    </div>
+                  </div>
+              </div>
+              <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Gender</div>
+                  <div class="input-field label-right col l8 m6 s12">
+                       {{#if checkGender questionUpdation.gender}}
+                        <span>{{checkGender questionUpdation.gender}}</span>
+                        {{else}}
+                        <span>Male & Female</span>
+                        {{/if}}
+                  </div>
+              </div>
+              <!--  <div class="row form-group">
+                  <div class="input-field label-left col l2 m4 s6">Helper</div>
+                  <div class="input-field label-right col l8 m6 s12">{{questionVal.helper}}</div>
+              </div> -->
+              
+            </div>
+
+            <div class="answer" id="fiftehTabCont">
+             {{#if questionSession}}
+              <div class="row form-group text-black">
+                <div class="col s12">
+                  <div class="input-field label-left col l2 m6 s12">Question</div>
+                  {{#if questionUpdation}}
+                  <div class="input-field label-right col l10 m6 s12"><p>{{getText questionUpdation.categoryName}} >> <a href="">{{getText questionUpdation.questionDef}}</a></p>
+                  </div>
+                  {{else}}
+                  <div class="input-field label-right col l10 m6 s12"><p>{{getText questionVal.questionCat}} >> <a href="">{{getText questionVal.questionDef}}</a></p>
+                  </div>
+                  {{/if}}
+                </div>
+              </div>
+               {{#each responseRR}}
+                 {{#unless deleted}}
+                 <div class="row rr-item">{{questionSessVal}}
+                   <div class="col s12">
+                      <div class="input-field col s12">
+                              <div class="row rowminus">
+                                   <div class="col l2 custom-label">Risk Ratio {{index}}</div>
+                                   <div class="col m2 s12">
+                                        <select id="rrGender_{{index}}" name="rrGender_{{index}}">
+                                        <option {{isSelect 0 rrGender}} value="0">Male & Female</option>
+                                        <option {{isSelect 2 rrGender}} value="2">Male</option>
+                                        <option {{isSelect 1 rrGender}} value="1">Female</option>
+                                      </select>
+                                        <label class="{{#if responseRR}}active{{/if}}">Gender</label>
+                                    </div>
+                                    <div class="col m2 s12">
+                                        <input type="text" name="rrAge_{{index}}" id="rrAge_{{index}}" value="{{rrAge}}">
+                                        <label class="{{#if responseRR}}active{{/if}}">Age</label>
+                                    </div>
+
+                                    {{#if dataElementType}}
+                                        {{#if equalVal dataElementType "cholesterol"}}
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_total_{{index}}" id="rrResponse_total_{{index}}" value="{{rrResponseArr.total}}" placeholder="mmo/l">
+                                        <label class="active">
+                                        Total</label>
+                                        </div>
+
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_HDL_{{index}}" id="rrResponse_HDL_{{index}}" value="{{rrResponseArr.HDL}}" placeholder="mmo/l">
+                                        <label class="active">
+                                        HDL</label>
+                                        </div>
+
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_LDL_{{index}}" id="rrResponse_LDL_{{index}}" value="{{rrResponseArr.LDL}}" placeholder="mmo/l">
+                                        <label class="active">
+                                        LDL</label>
+                                        </div>
+
+                                        <div class="col m2 s12">
+                                        &nbsp;
+                                        </div>
+
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_triglycerides_{{index}}" id="rrResponse_triglycerides_{{index}}" value="{{rrResponseArr.triglycerides}}">
+                                        <label class="active" placeholder="mmo/l">
+                                        Triglycerides</label>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if equalVal dataElementType "alcohol"}}
+                                        <div class="col m2 s12">
+                                        <select name="rrResponse_unit_{{index}}" id="rrResponse_unit_{{index}}">
+                                        <option value="">Please Select</option>
+                                        <option value="large" {{isSelect rrResponseArr.unit "large"}}>large</option>
+                                        
+                                        <option value="medium" {{isSelect rrResponseArr.unit "medium"}}>medium</option>
+                                        
+                                        <option value="small" {{isSelect rrResponseArr.unit "small"}}>small</option>
+                                        </select>
+                                        <label class="active">
+                                        Unit</label>
+                                        </div>
+
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_value_{{index}}" id="rrResponse_value_{{index}}" value="{{rrResponseArr.value}}">
+                                        <label class="active">
+                                        Value</label>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if equalVal dataElementType "blood_pressure"}}
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_systolic_{{index}}" id="rrResponse_systolic_{{index}}" value="{{rrResponseArr.systolic}}" placeholder="mmHg">
+                                        <label class="active">
+                                        Systolic</label>
+                                        </div>
+
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_disatolic_{{index}}" id="rrResponse_disatolic_{{index}}" value="{{rrResponseArr.disatolic}}" placeholder="mmHg">
+                                        <label class="active">
+                                        Diastolic</label>
+                                        </div>
+                                        {{/if}}
+
+                                        {{#if equalVal dataElementType "blood_glucose"}}
+                                        <div class="col m2 s12">
+                                        <input type="text" name="rrResponse_{{index}}" id="rrResponse_{{index}}" value="{{rrResponse}}" placeholder="mmo/l">
+                                        <label class="active">
+                                        Total</label>
+                                        </div>
+                                        {{/if}}
+                                    {{else}}
+                                    <div class="col m2 s12">
+                                        {{#if quesHaveOpts questionVal.type}}
+                                        <select name="rrResponse_{{index}}" id="rrResponse_{{index}}">
+                                        {{#each responseAnswer}}
+                                        <option value="{{ansId}}" {{isSelect ../rrResponse ansId}}>{{getText ansLbl "rrResponse" index}}</option>
+                                        {{/each}}
+                                        </select>
+                                        {{else}}
+                                        <input type="text" name="rrResponse_{{index}}" id="rrResponse_{{index}}" value="{{rrResponse}}">
+                                        {{/if}}
+                                        <label class="{{#if responseRR}}active{{/if}}">Response</label>
+                                    </div>
+                                    {{/if}}
+
+                                    <div class="col m2 s12">
+                                        <select name="rrProgram_{{index}}" id="rrProgram_{{index}}">
+                                        <option value="">Please Select</option>
+                                        {{#each programList}}
+                                        <option value="{{_id}}" {{isSelect ../rrProgram _id}}>{{contentText program_name}}</option>
+                                        {{/each}}
+                                        </select>
+                                        
+                                        <label class="{{#if responseRR}}active{{/if}}">Program</label>
+                                    </div>
+
+                                    {{#if equalOrVal dataElementType "alcohol" "blood_pressure"}}
+                                    <div class="col m2 s12">
+                                    &nbsp;
+                                    </div>
+                                    <div class="col m2 s12">
+                                    &nbsp;
+                                    </div>
+                                    {{/if}}
+
+                                    <div class="col m2 s12">
+                                        <input type="number" name="rrValue_{{index}}" id="rrValue_{{index}}" value="{{rrValue}}">
+                                        <label class="{{#if responseRR}}active{{/if}}">RR Value</label>
+                                    </div>
+
+                                    {{#if dataElementType}}
+                                      {{#if equalVal dataElementType "blood_glucose"}}
+                                      <div class="col m2 s12">
+                                      &nbsp;
+                                      </div>
+                                      {{/if}}
+                                    {{else}}
+                                    <div class="col m2 s12">
+                                    &nbsp;
+                                    </div>
+                                    {{/if}}
+
+                                    <div class="col m2 s12">
+                                        
+                                        <select name="rrRAG_{{index}}" id="rrRAG_{{index}}">
+                                        <option value="">Please Select</option>
+                                        
+                                        <option value="red" {{isSelect rrRAG "red"}}>RED</option>
+                                        <option value="amber" {{isSelect rrRAG "amber"}}>Amber</option>
+                                        <option value="green" {{isSelect rrRAG "green"}}>Green</option>
+                                        
+                                        </select>
+                                        
+                                        <label class="{{#if responseRR}}active{{/if}}">RAG value</label>
+                                    </div>
+                                    <div class="col m2 s12">
+                                        <span id="delRR_{{index}}" class="delete deleteRR tooltip" style="cursor:pointer;"><i class="fa fa-trash-o"></i>
+                                        <span class="tooltiptext">Delete</span>
+                                        </span>
+                                    </div>
+                              </div>
+                             
+                         </div>
+                   </div>
+                 </div>
+                 {{/unless}}
+               {{/each}}
+                <div class="row">
+                <div class="addRiskRatio col l8 offset-l2"><span id="addRiskRatio" style="color:#039be5;cursor:pointer;"><i class="fa fa-plus-circle fa-lg"></i> Add another Risk Ratio</span></div>
+                
+              </div>
+              {{intializeselect "#fiftehTabCont select"}}
+              {{/if}}
+            </div>
+          </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+     <button class="btn waves-effect waves-light" type="submit" name="action">   Save <i class="mdi-content-send right"></i></button>
+      <a href="#" id="questionClose" class="modal-close modal-action waves-effect waves-green btn-flat">Cancel</a>
+    </div>
+    </form>
+  </div>
+</div>
+<!-- Question Popup and Form End -->
+</template>

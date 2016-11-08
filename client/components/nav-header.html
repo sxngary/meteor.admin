@@ -1,0 +1,33 @@
+<template name="App_navHeader">
+  <nav>
+      <div class="nav-wrapper">
+
+        <a href="#" class="brand-logo">RPM</a>
+        <a href="javascript:;" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+          {{#if currentUser}}
+            <li><a href="/" class="dashboard">Dashboard</a></li>
+            <li><a href="/questionnaire" class="questionnaire">Questionnaire</a></li>
+            <li><a href="/agreements" class="agreements">Agreements</a></li>
+            <li><a class="logout">{{_ 'Logout'}}</a></li>
+          {{else}}
+            <li class="{{isActiveRoute 'signin'}}"><a href="{{pathFor 'signin'}}" >{{_ 'Sign In'}}</a></li>
+            <li class="{{isActiveRoute 'join'}}"><a href="{{pathFor 'join'}}" >{{_ 'Join'}}</a></li>
+          {{/if}}
+        </ul>
+
+        <ul class="side-nav" id="mobile-demo">
+          {{#if currentUser}}
+            <li><a href="/" class="dashboard">Dashboard</a></li>
+            <li><a href="/questionnaire" class="questionnaire">Questionnaire</a></li>
+            <li><a href="/agreements" class="agreements">Agreements</a></li>
+            <li><a class="logout">{{_ 'Logout'}}</a></li>
+          {{else}}
+            <li class="{{isActiveRoute 'signin'}}"><a href="{{pathFor 'signin'}}" >{{_ 'Sign In'}}</a></li>
+            <li class="{{isActiveRoute 'join'}}"><a href="{{pathFor 'join'}}" >{{_ 'Join'}}</a></li>
+          {{/if}}
+        </ul>
+        
+      </div>
+  </nav>  
+</template>
