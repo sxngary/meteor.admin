@@ -242,16 +242,26 @@ Template.questionnaire.events({
 			catId = id.split('_');
 			catData = { deleted: '1' };
 
-			var questions = Questions.find({ category: catId[1], deleted: '0' }).fetch();
+			var questions = Questions.find({ 
+				category: catId[1],
+				$or: [{deleted: '0'}, {deleted: {$exists: false} }], 
+				 
+			}).fetch();
 			if (questions && questions.length) {
 				alert('This category contains questions data. Not allowed to remove.');
 				return;
 			}
 
-			var subCategories = Category.find({ parent: catId[1], deleted: '0' }).fetch();
+			var subCategories = Categories.find({ 
+				parent: catId[1], 
+				$or: [{deleted: '0'}, {deleted: {$exists: false} }],
+			}).fetch();
 			if (subCategories && subCategories.length) {
 				for (var i = 0; i < subCategories.length; i++) {
-					var questions = Questions.find({ category: subCategories[i]['_id'], deleted: '0' }).fetch();
+					var questions = Questions.find({ 
+						category: subCategories[i]['_id'], 
+						$or: [{deleted: '0'}, {deleted: {$exists: false} }],
+					}).fetch();
 					if (questions && questions.length) {
 						alert('This category contains questions data. Not allowed to remove.');
 						return;
@@ -271,13 +281,7 @@ Template.questionnaire.events({
 						Session.set('disease', undefined);
 					}
 
-					$('#categoriesPopup').closeModal();
-					Meteor.setTimeout(function () {
-						$('select').material_select();
-
-					}, 1000);
-
-					Router.go('/questionnaire');
+					//$('#categoriesPopup').closeModal();
 				}
 			});
 		}
@@ -315,6 +319,8 @@ Template.questionnaire.events({
         Meteor.call("insertQuestionnaire", questionnaireData, function (error, questionnaireId) {
             if (questionnaireId) {
                 //Session.set('questionnaireSuccessMsg', 'Questionnaire added successfully!');
+				Session.set("questionnaireListing", undefined);
+				Session.set("questionnaireLoaded", false);
 
                 if (Session.get("imgArr")) {
                     Session.set('imgArr', undefined);
@@ -1090,7 +1096,7 @@ Template.questionnaire.events({
 		var clickQuestion = Questions.find({ _id: Id }).fetch();
 
 		if (clickQuestion.length > 0) {
-			var categoryQuestion = Category.find({ _id: clickQuestion[0].category }).fetch();
+			var categoryQuestion = Categories.find({ _id: clickQuestion[0].category }).fetch();
 			if (categoryQuestion) {
 				if (categoryQuestion[0].parent == 0) {
 					var index = "0";
@@ -1137,7 +1143,7 @@ Template.questionnaire.events({
 					}
 				} else {
 					var index = "0";
-					var parentCatVal = Category.find({ _id: categoryQuestion[0].parent }).fetch();
+					var parentCatVal = Categories.find({ _id: categoryQuestion[0].parent }).fetch();
 					if (parentCatVal) {
 						var catName = Contents.find({ _id: categoryQuestion[0].cat_name }).fetch();
 						catName = catName[0].en;
@@ -1229,7 +1235,9 @@ Template.questionnaire.events({
 
 			Meteor.call("insertQuestionnaire", catData, catId[1], function (error, catId) {
 				if (catId) {
-					Router.go('/questionnaire');
+					Session.set("questionnaireListing", undefined);
+					Session.set("questionnaireLoaded", false);
+					//Router.go('/questionnaire');
 				}
 			});
 		}
@@ -1249,7 +1257,7 @@ Template.questionnaire.events({
 		//console.log("_selectedQns:: ", _selectedQns)
 		var questionData = Questions.find({ _id: questionId }).fetch();
 		if (questionData.length) {
-			var categoryData = Category.find({ _id: questionData[0].category }).fetch();
+			var categoryData = Categories.find({ _id: questionData[0].category }).fetch();
 			if (categoryData[0].parent == 0) {
 				var mainIndex = returnIndex(_selectedQns, categoryData[0]._id)
 					, mainDepsQuestion = findDepQuestion(_selectedQns, mainIndex, questionId);
