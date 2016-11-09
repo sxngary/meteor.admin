@@ -5,7 +5,7 @@ check@1.2.3
 tracker@1.1.0
 
 # standard libraries
-jquery
+#jquery
 underscore@1.0.9
 less@2.7.5
 #twbs:bootstrap

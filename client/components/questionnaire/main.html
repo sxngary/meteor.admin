@@ -53,7 +53,7 @@
                     </div>
                     <div class="col s12" id="qCategoryTab">
                         {{#if activeTab "categories"}}
-                        
+                        <div class="row">
                         {{#if displayCategory}} 
                         <table class="bordered striped highlight centered responsive-table">
                             <thead>
@@ -99,16 +99,15 @@
                             </tbody>
                         </table>
                         {{else}}
-                        <div class="row">
-                            <div class="col s12">
-                                <ul class="collection table-layout">
-                                    <li class="collection-item avatar row">
-                                        <div class="col m12 s12 text-capitalize">No Questionnaire categories found.</div>
-                                    </li>
-                                </ul>
-                            </div>
+                        <div class="col s12">
+                            <ul class="collection table-layout">
+                                <li class="collection-item avatar row">
+                                    <div class="col m12 s12 text-capitalize">No Questionnaire categories found.</div>
+                                </li>
+                            </ul>
                         </div>
                         {{/if}} 
+                        </div>
                         
                         <div class="row">
                         <div class="col s12">

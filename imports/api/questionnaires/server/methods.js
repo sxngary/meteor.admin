@@ -24,7 +24,7 @@ Meteor.methods({
     },
     fetchCategoryData: function (id) {
         var category = Categories.findOne({ _id: id });
-        if (typeof category.parent !== "undefined") {
+        if (category.parent != "0") {
             var parentCat = Categories.findOne({_id: category.parent});
             category.parentVal = parentCat.cat_name;
         }
