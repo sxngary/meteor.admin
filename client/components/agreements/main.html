@@ -32,7 +32,7 @@
                             <div class="status col m2 s12"><strong>Name</strong></div>
                             <div class="status col m3 s12"><strong>Title</strong></div>
                             <div class="status col m2 s12"><strong>Category</strong></div>
-                            <div class="status col m3 s12"><strong>Template</strong></div>
+                            <div class="status col m3 s12"><strong>Created</strong></div>
                             <div class="action col m2 s12"><strong>Action</strong></div>
                         </li>
                         {{#if agreementsList}}
@@ -48,7 +48,7 @@
                                 {{agreementCategory}}
                             </div>
                             <div class="col-item-mob status col m3 s12 edit_template">
-                                <!--{{{agreementBody}}}-->
+                                {{createdAt}}
                             </div>
                             <div class="action col m2 s12">
                                 <a href="javascript:void(0);" id="{{_id}}" class="editAgreement tooltip">
