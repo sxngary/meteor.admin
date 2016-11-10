@@ -1,0 +1,8 @@
+.level-0, .level-1 {
+    padding: 10px;
+    font-size: 1.1em;
+}
+
+.level-1 {
+    padding-left: 20px;
+}

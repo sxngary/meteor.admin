@@ -1,6 +1,7 @@
 import { Questionnaires } from '/imports/api/questionnaires/questionnaires';
 import { Categories } from '/imports/api/questionnaires/categories';
 import { Questions } from '/imports/api/questionnaires/questions';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 
 questionsDeps = new Deps.Dependency;
 Template.questionnaire.events({
@@ -12,10 +13,10 @@ Template.questionnaire.events({
 			catIndex = $(elem).data('cat-index');
 
 		var categoryData = Session.get('categoryData');
-		var questions = Questions.find({ 
-			category: catId, 
-			dependency: [], 
-			$or: [{'deleted': '0'}, {'deleted': {$exists: false} }] 
+		var questions = Questions.find({
+			category: catId,
+			dependency: [],
+			$or: [{ 'deleted': '0' }, { 'deleted': { $exists: false } }]
 		}).fetch();
 
 		questionData = [];
@@ -35,16 +36,16 @@ Template.questionnaire.events({
 		}
 
 		var subcategoryData = [];
-		var subCategory = Categories.find({ 
+		var subCategory = Categories.find({
 			parent: catId,
-			$or: [{'deleted': '0'}, {'deleted': {$exists: false} }]
+			$or: [{ 'deleted': '0' }, { 'deleted': { $exists: false } }]
 		}).fetch();
 		if (subCategory.length > 0) {
 			for (var k = 0; k < subCategory.length; k++) {
-				var subCatQuestion = Questions.find({ 
-					category: subCategory[k]._id, 
-					dependency: [], 
-					$or: [{'deleted': '0'}, {'deleted': {$exists: false} }] 
+				var subCatQuestion = Questions.find({
+					category: subCategory[k]._id,
+					dependency: [],
+					$or: [{ 'deleted': '0' }, { 'deleted': { $exists: false } }]
 				}).fetch();
 
 				if (subCatQuestion.length > 0) {
@@ -186,12 +187,12 @@ Template.questionnaire.events({
 						Session.set('selectedVal', true);
 					}
 
-					Session.set('categoryDetail', { 
-						detail: data, 
-						catName: data.cat_name, 
-						parent: data.parent, 
-						catSummary: data.summary, 
-						catHelper: data.helper 
+					Session.set('categoryDetail', {
+						detail: data,
+						catName: data.cat_name,
+						parent: data.parent,
+						catSummary: data.summary,
+						catHelper: data.helper
 					});
 
 					//$('#cat_color.minicolors').minicolors('value', data.cat_color);
@@ -242,25 +243,25 @@ Template.questionnaire.events({
 			catId = id.split('_');
 			catData = { deleted: '1' };
 
-			var questions = Questions.find({ 
+			var questions = Questions.find({
 				category: catId[1],
-				$or: [{deleted: '0'}, {deleted: {$exists: false} }], 
-				 
+				$or: [{ deleted: '0' }, { deleted: { $exists: false } }],
+
 			}).fetch();
 			if (questions && questions.length) {
 				alert('This category contains questions data. Not allowed to remove.');
 				return;
 			}
 
-			var subCategories = Categories.find({ 
-				parent: catId[1], 
-				$or: [{deleted: '0'}, {deleted: {$exists: false} }],
+			var subCategories = Categories.find({
+				parent: catId[1],
+				$or: [{ deleted: '0' }, { deleted: { $exists: false } }],
 			}).fetch();
 			if (subCategories && subCategories.length) {
 				for (var i = 0; i < subCategories.length; i++) {
-					var questions = Questions.find({ 
-						category: subCategories[i]['_id'], 
-						$or: [{deleted: '0'}, {deleted: {$exists: false} }],
+					var questions = Questions.find({
+						category: subCategories[i]['_id'],
+						$or: [{ deleted: '0' }, { deleted: { $exists: false } }],
 					}).fetch();
 					if (questions && questions.length) {
 						alert('This category contains questions data. Not allowed to remove.');
@@ -303,31 +304,31 @@ Template.questionnaire.events({
 	'submit #questionnaireAdd': function (event, data) {
 		event.preventDefault();
 
-        let questionnaireData = {
-            title: data.find("#title").value,
-            keyString: data.find("#keyString").value,
-            summary: data.find("#questionnaireSummary").value,
-            helper: "",
-            createdBy: Meteor.userId()
-        };
-        if (Session.get('imgArr')) {
-            var imgArray = Session.get('imgArr');
-            var fileName = 'questionnaireLogo-' + imgArray[0]._id + '-' + imgArray[0].name;
-            questionnaireData.image_name = fileName;
-        }
+		let questionnaireData = {
+			title: data.find("#title").value,
+			keyString: data.find("#keyString").value,
+			summary: data.find("#questionnaireSummary").value,
+			helper: "",
+			createdBy: Meteor.userId()
+		};
+		if (Session.get('imgArr')) {
+			var imgArray = Session.get('imgArr');
+			var fileName = 'questionnaireLogo-' + imgArray[0]._id + '-' + imgArray[0].name;
+			questionnaireData.image_name = fileName;
+		}
 
-        Meteor.call("insertQuestionnaire", questionnaireData, function (error, questionnaireId) {
-            if (questionnaireId) {
-                //Session.set('questionnaireSuccessMsg', 'Questionnaire added successfully!');
+		Meteor.call("insertQuestionnaire", questionnaireData, function (error, questionnaireId) {
+			if (questionnaireId) {
+				//Session.set('questionnaireSuccessMsg', 'Questionnaire added successfully!');
 				Session.set("questionnaireListing", undefined);
 				Session.set("questionnaireLoaded", false);
 
-                if (Session.get("imgArr")) {
-                    Session.set('imgArr', undefined);
-                }
-                $('#questionnairePopup').modal("close");
-            }
-        });
+				if (Session.get("imgArr")) {
+					Session.set('imgArr', undefined);
+				}
+				$('#questionnairePopup').modal("close");
+			}
+		});
 	},
 	'change #image_name': function (event, template) {
 
@@ -818,7 +819,7 @@ Template.questionnaire.events({
 	'click .hierarchy': function (event, data) {
 		event.preventDefault();
 		var qId = $(event.currentTarget).attr("id");
-		Router.go('/question/' + qId);
+		FlowRouter.go('/question/' + qId);
 	},
 	'click .questionnaire': function (event, data) {
 		event.preventDefault();
@@ -839,16 +840,12 @@ Template.questionnaire.events({
 		var questionnaireData = Questionnaires.find({ _id: qId }).fetch();
 		var completeArr = [];
 		if (questionnaireData.length > 0) {
-			var questionnaireTitle = Contents.find({ _id: questionnaireData[0].title }).fetch();
-			var strap = Contents.find({ _id: questionnaireData[0].strap }).fetch();
-			var summary = Contents.find({ _id: questionnaireData[0].summary }).fetch();
-			var helper = Contents.find({ _id: questionnaireData[0].helper }).fetch();
 			completeArr.push({
 				questionnaire: questionnaireData[0],
-				questionnaireTitle: questionnaireTitle[0],
-				strap: strap[0],
-				summary: summary[0],
-				helper: helper[0]
+				questionnaireTitle: questionnaireData[0].title,
+				strap: questionnaireData[0].strap,
+				summary: questionnaireData[0].summary,
+				helper: questionnaireData[0].helper
 			});
 			if (questionnaireData[0].image_name) {
 				var imgArray = questionnaireData[0].image_name.split('-');
@@ -858,8 +855,8 @@ Template.questionnaire.events({
 			}
 		}
 		$('#questionnairePopup').modal("open", {
-			ready: function () {//alert(summary[0].en)
-				$('#questionnaireUpdate').parsley().reset();
+			ready: function () {
+				/*$('#questionnaireUpdate').parsley().reset();
 				tabbing();
 				$('textarea#questionnairehelper').editable({
 					key: '1D4B3B3D9A2C4A4G3G3F3J3==',
@@ -868,12 +865,12 @@ Template.questionnaire.events({
 					maxHeight: 100,
 					imageUploadURL: '/api/upload'
 				})// Catch image removal from the editor.
-					.on('editable.afterRemoveImage', function (e, editor, $img) {
-						Meteor.call('removeFroalaImage', $img.attr('src'), function (err, res) {
-							if (err) console.log('image not removed');
-							console.log("image removed!");
-						})
-					});
+				.on('editable.afterRemoveImage', function (e, editor, $img) {
+					Meteor.call('removeFroalaImage', $img.attr('src'), function (err, res) {
+						if (err) console.log('image not removed');
+						console.log("image removed!");
+					})
+				});
 
 				$('textarea#questionnaireSummary').editable({
 					key: '1D4B3B3D9A2C4A4G3G3F3J3==',
@@ -882,12 +879,12 @@ Template.questionnaire.events({
 					maxHeight: 300,
 					imageUploadURL: '/api/upload'
 				})// Catch image removal from the editor.
-					.on('editable.afterRemoveImage', function (e, editor, $img) {
-						Meteor.call('removeFroalaImage', $img.attr('src'), function (err, res) {
-							if (err) console.log('image not removed');
-							console.log("image removed!");
-						})
-					});
+				.on('editable.afterRemoveImage', function (e, editor, $img) {
+					Meteor.call('removeFroalaImage', $img.attr('src'), function (err, res) {
+						if (err) console.log('image not removed');
+						console.log("image removed!");
+					})
+				});*/
 
 				$('.loader-bg').hide();
 				//Meteor.setTimeout(function() {alert($('#questionnairehelper').length)
@@ -898,6 +895,8 @@ Template.questionnaire.events({
 					$('#questionnaireSummary').editable("setHTML", summary[0].en);
 				}
 				//}, 2000);
+
+				$('ul.tabs').tabs();
 			}
 		});
 
@@ -907,171 +906,63 @@ Template.questionnaire.events({
 	'submit #questionnaireUpdate': function (event, data) {
 		event.preventDefault();
 		var questionnaireSession = Session.get("questionnaireItem");
-		var lang = Router.current().params['hash'];
-		if (!lang) {
-			lang = 'en';
-		}
+		var lang = 'en';
 
 		if (questionnaireSession) {
-			formData = {};
-			formData = {
-				_id: questionnaireSession[0].questionnaire.title,
-				element: 'questionnaire',
-				type: 'questionnaire_title',
-				translation: [],
-				direct_access: data.find("#title").value.toLowerCase()
-			};
-			if (lang === "en") {
-				formData["en"] = data.find("#title").value;
-			} else {
-				formData["translation"].push({
-					"_id": new Meteor.Collection.ObjectID()._str,
-					"lang": lang,
-					text: data.find("#title").value
-				});
-			}
 
-			Meteor.call("insertContents", formData, questionnaireSession[0].questionnaire.title, function (error, questionnaireTitle_id) {
-				if (questionnaireTitle_id) {
-					formDataNext = {};
-					formDataNext = {
-						_id: questionnaireSession[0].questionnaire.strap,
-						element: 'questionnaire',
-						type: 'questionnaire_strap',
-						translation: [],
-						direct_access: data.find("#strap").value.toLowerCase()
-					};
-					if (lang === "en") {
-						formDataNext["en"] = data.find("#strap").value;
-					} else {
-						formDataNext["translation"].push({
-							"_id": new Meteor.Collection.ObjectID()._str,
-							"lang": lang,
-							text: data.find("#strap").value
-						});
-					}
-					Meteor.call("insertContents", formDataNext, questionnaireSession[0].questionnaire.strap, function (error, questionnaireStrap_id) {
-						if (questionnaireStrap_id) {
-							formDataNextItem = {};
-							formDataNextItem = {
-								_id: questionnaireSession[0].questionnaire.summary,
-								element: 'questionnaire',
-								type: 'questionnaire_strap',
-								translation: [],
-								direct_access: ''
-							};
-							if (lang === "en") {
-								formDataNextItem["en"] = data.find("#questionnaireSummary").value;
-							} else {
-								formDataNextItem["translation"].push({
-									"_id": new Meteor.Collection.ObjectID()._str,
-									"lang": lang,
-									text: data.find("#questionnaireSummary").value
-								});
-							}
-							Meteor.call("insertContents", formDataNextItem, questionnaireSession[0].questionnaire.summary, function (error, questionnaireSummary_id) {
-								if (questionnaireSummary_id) {
-									formHelper = {};
-									formHelper = {
-										_id: questionnaireSession[0].questionnaire.helper,
-										element: 'questionnaire',
-										type: 'questionnaire_helper',
-										translation: [],
-										direct_access: ''
-									};
-									if (lang === "en") {
-										formHelper["en"] = data.find("#questionnairehelper").value;
-									} else {
-										formHelper["translation"].push({
-											"_id": new Meteor.Collection.ObjectID()._str,
-											"lang": lang,
-											text: data.find("#questionnairehelper").value
-										});
-									}
-									Meteor.call("insertContents", formHelper, questionnaireSession[0].questionnaire.helper, function (error, questionnaireHelper_id) {
-										if (questionnaireHelper_id) {
-											var diseaseArr = [];
-											$('#questionnaireDisease :selected').each(function (i, selected) {
-												diseaseArr.push({ _id: $(selected).val() });
-											});
-											var algoArr = [];
-											$('#algorithm :selected').each(function (i, selected) {
-												algoArr.push({ _id: $(selected).val() });
-											});
-											/*Questionnaire Question add: End*/
+			var allQuestionArray = [];
+			/*Questionnaire Question add: Start*/
+			if (Session.get("allQuestion")) {
+				var allQuestion = Session.get("allQuestion");
 
-											var allQuestionArray = [];
-											/*Questionnaire Question add: Start*/
-											if (Session.get("allQuestion")) {
-												var allQuestion = Session.get("allQuestion");
+				for (var q = 0; q < allQuestion.length; q++) {
+					var questionArray = [];
 
-												for (var q = 0; q < allQuestion.length; q++) {
-													var questionArray = [];
-
-													if (allQuestion[q].mainCatQuestion) {
-														for (var s = 0; s < allQuestion[q].mainCatQuestion.length; s++) {
-															questionArray.push({ _id: allQuestion[q].mainCatQuestion[s].questionId, level: allQuestion[q].mainCatQuestion[s].level, parentQsId: allQuestion[q].mainCatQuestion[s].parentQsId });
-														}
-													}
-
-													var categoryQuestionArray = [];
-													if (allQuestion[q].subCategory) {
-														for (var c = 0; c < allQuestion[q].subCategory.length; c++) {
-
-															var subQuestionArray = [];
-															for (var d = 0; d < allQuestion[q].subCategory[c].SubcatQuestions.length; d++) {
-																subQuestionArray.push({ _id: allQuestion[q].subCategory[c].SubcatQuestions[d].questionId, level: allQuestion[q].subCategory[c].SubcatQuestions[d].level, parentQsId: allQuestion[q].subCategory[c].SubcatQuestions[d].parentQsId });
-															}
-															categoryQuestionArray.push({ subCategory_id: allQuestion[q].subCategory[c].subCatId, questions: subQuestionArray });
-
-														}
-														allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray, subCategories: categoryQuestionArray });
-													} else {
-														allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray });
-													}
-													//console.log("allQuestionArray11111111",allQuestionArray);
-												}
-
-											}
-											questionnaireData = {};
-											questionnaireData = {
-												_id: questionnaireSession[0].questionnaire._id,
-												title: questionnaireSession[0].questionnaire.title,
-												strap: questionnaireSession[0].questionnaire.strap,
-												summary: questionnaireSession[0].questionnaire.summary,
-												helper: questionnaireSession[0].questionnaire.helper,
-												q_type: data.find('#q_type').value,
-												sponsor: data.find('#sponsor').value,
-												disease: diseaseArr,
-												questions: allQuestionArray,
-												algorithm: algoArr,
-												createdBy: Meteor.userId()
-											};
-											if (Session.get('imgArr')) {
-												var imgArray = Session.get('imgArr');
-												var fileName = 'questionnaireLogo-' + imgArray[0]._id + '-' + imgArray[0].name;
-												questionnaireData.image_name = fileName;
-
-											}
-											Meteor.call("insertQuestionnaire", questionnaireData, questionnaireSession[0].questionnaire._id, function (error, questionnaireId) {
-												if (questionnaireId) {
-													Session.set('questionnaireSuccessMsg', 'Questionnaire added successfully!');
-
-													Session.set("imgArr", "");
-													Session.set("questionnaireItem", "");
-													Session.set('allQuestion', '');
-													$('#questionnairePopup').modal("close");
-													Router.go('/questionnaire');
-												}
-
-											});
-										}
-									});
-								}
-							});
+					if (allQuestion[q].mainCatQuestion) {
+						for (var s = 0; s < allQuestion[q].mainCatQuestion.length; s++) {
+							questionArray.push({ _id: allQuestion[q].mainCatQuestion[s].questionId, level: allQuestion[q].mainCatQuestion[s].level, parentQsId: allQuestion[q].mainCatQuestion[s].parentQsId });
 						}
-					});
+					}
+
+					var categoryQuestionArray = [];
+					if (allQuestion[q].subCategory) {
+						for (var c = 0; c < allQuestion[q].subCategory.length; c++) {
+
+							var subQuestionArray = [];
+							for (var d = 0; d < allQuestion[q].subCategory[c].SubcatQuestions.length; d++) {
+								subQuestionArray.push({ _id: allQuestion[q].subCategory[c].SubcatQuestions[d].questionId, level: allQuestion[q].subCategory[c].SubcatQuestions[d].level, parentQsId: allQuestion[q].subCategory[c].SubcatQuestions[d].parentQsId });
+							}
+							categoryQuestionArray.push({ subCategory_id: allQuestion[q].subCategory[c].subCatId, questions: subQuestionArray });
+
+						}
+						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray, subCategories: categoryQuestionArray });
+					} else {
+						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray });
+					}
+					//console.log("allQuestionArray11111111",allQuestionArray);
 				}
+
+			}
+			questionnaireData = {};
+			questionnaireData = {
+				_id: questionnaireSession[0].questionnaire._id,
+				title: data.find("#title").value,
+				strap: data.find("#strap").value,
+				summary: data.find("#questionnaireSummary").value,
+				helper: data.find("#questionnairehelper").value,
+				questions: allQuestionArray,
+				createdBy: Meteor.userId()
+			};
+			Meteor.call("insertQuestionnaire", questionnaireData, questionnaireSession[0].questionnaire._id, function (error, questionnaireId) {
+				if (questionnaireId) {
+					//Session.set('questionnaireSuccessMsg', 'Questionnaire added successfully!');
+
+					Session.set("imgArr", "");
+					Session.set("questionnaireItem", "");
+					Session.set('allQuestion', '');
+					$('#questionnairePopup').modal("close");
+				}
+
 			});
 		}
 
@@ -1080,7 +971,7 @@ Template.questionnaire.events({
 		Session.set("questionnaireItem", "");
 		Session.set("allQuestion", "");
 
-        $('#questionnairePopup').modal("close");
+		$('#questionnairePopup').modal("close");
 	},
 	'click .arrowadd': function (event, data) {
 		event.preventDefault();
@@ -1101,13 +992,11 @@ Template.questionnaire.events({
 				if (categoryQuestion[0].parent == 0) {
 					var index = "0";
 					var catName = '';
-					var parentCat = Contents.find({ _id: categoryQuestion[0].cat_name }).fetch();
 					var parentCatColor = categoryQuestion[0].cat_color;
-					var quesDef = Contents.find({ _id: clickQuestion[0].question }).fetch();
 
 					questionData = [];
 					var hier = 0;
-					questionData.push({ questionId: Id, Qtitle: quesDef[0].en, level: hier++ });
+					questionData.push({ questionId: Id, Qtitle: clickQuestion[0].question, level: hier++ });
 					recursive(Id, hier);
 
 					if (allQuestion.length > 0) {
@@ -1136,24 +1025,21 @@ Template.questionnaire.events({
 							}
 						} else {
 							var index = "0";
-							allQuestion.push({ index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: parentCat[0].en, parentCatColor: parentCatColor, mainCatQuestion: questionData });
+							allQuestion.push({ index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: categoryQuestion[0].cat_name, parentCatColor: parentCatColor, mainCatQuestion: questionData });
 						}
 					} else {
-						allQuestion.push({ index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: parentCat[0].en, parentCatColor: parentCatColor, mainCatQuestion: questionData });
+						allQuestion.push({ index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: categoryQuestion[0].cat_name, parentCatColor: parentCatColor, mainCatQuestion: questionData });
 					}
 				} else {
 					var index = "0";
 					var parentCatVal = Categories.find({ _id: categoryQuestion[0].parent }).fetch();
 					if (parentCatVal) {
-						var catName = Contents.find({ _id: categoryQuestion[0].cat_name }).fetch();
-						catName = catName[0].en;
-						var quesDef = Contents.find({ _id: clickQuestion[0].question }).fetch();
-						var parentCat = Contents.find({ _id: parentCatVal[0].cat_name }).fetch();
+						var catName = categoryQuestion[0].cat_name;
 						var parentCatColor = parentCatVal[0].cat_color;
 						questionData = [];
 						var hier = 0;
 
-						questionData.push({ questionId: Id, Qtitle: quesDef[0].en, level: hier++ });
+						questionData.push({ questionId: Id, Qtitle: clickQuestion[0].question, level: hier++ });
 						recursive(Id, hier);
 						if (allQuestion.length > 0) {
 							var filterQs = _.findWhere(allQuestion, { mainCatId: parentCatVal[0]._id });
@@ -1213,12 +1099,12 @@ Template.questionnaire.events({
 								var index = "0";
 								var subCatArr = [];
 								subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
-								allQuestion.push({ index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCat[0].en, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
+								allQuestion.push({ index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
 							}
 						} else {
 							var subCatArr = [];
 							subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
-							allQuestion.push({ index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCat[0].en, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
+							allQuestion.push({ index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
 							//allQuestion.push({index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCat[0].en, parentCatColor: parentCatColor,childCatName: catName,childCatColor: categoryQuestion[0].cat_color,SubcatQuestions: questionData});
 						}
 					}
@@ -1444,8 +1330,7 @@ function recursive(id, lvl) {
 	if (question.length > 0) {
 
 		for (var k = 0; k < question.length; k++) {
-			var questionName = Contents.find({ _id: question[k].question }).fetch();
-			questionData.push({ questionId: question[k]._id, parentQsId: id, Qtitle: questionName[0].en, contentId: questionName[0]._id, keyString: question[k].key_string, gender: question[k].gender, qType: question[k].question_type, level: lvl });
+			questionData.push({ questionId: question[k]._id, parentQsId: id, Qtitle: question[k].question, keyString: question[k].key_string, gender: question[k].gender, qType: question[k].question_type, level: lvl });
 			recursive(question[k]._id, lvl + 1);
 
 		}
@@ -1459,8 +1344,7 @@ function recursiveSubCategory(id, level) {
 	var quesLength = question.length;
 	if (quesLength > 0) {
 		for (var k = 0; k < quesLength; k++) {
-			var questionName = Contents.find({ _id: question[k].question }).fetch();
-			subCatquestionData.push({ questionId: question[k]._id, Qtitle: questionName[0].en, contentId: questionName[0]._id, keyString: question[k].key_string, gender: question[k].gender, qType: question[k].question_type, level: level });
+			subCatquestionData.push({ questionId: question[k]._id, Qtitle: question[k].question, keyString: question[k].key_string, gender: question[k].gender, qType: question[k].question_type, level: level });
 
 			recursiveSubCategory(question[k]._id, level + 1);
 		}
