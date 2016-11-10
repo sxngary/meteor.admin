@@ -26,9 +26,15 @@ Meteor.methods({
     statusAgreementTemplate:function(id,status){
         if (id) {
             if (status) {
-                return Agreements.update({_id:id}, { $set: {status:false} });
+                var result = Agreements.update({_id:id}, { $set: {status:false} });
+                if (result) {
+                    return "Inactive";
+                }
             }else{
-                return Agreements.update({_id:id}, { $set: {status:true} });
+                var result = Agreements.update({_id:id}, { $set: {status:true} });
+                if (result) {
+                    return "Active";
+                }
             }
         }
     }

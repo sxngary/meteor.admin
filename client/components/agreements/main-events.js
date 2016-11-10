@@ -12,6 +12,7 @@ Template.agreements.events({
         var agreementsData = Agreements.findOne({_id:id});
         if (agreementsData) {
             Session.set('agreementData',agreementsData);
+            $('#agreement_body').froalaEditor('html.set', agreementsData.agreementBody);
             $('#openAgreement').modal('open',{
                 dismissible:true,
                 ready: function(modal, trigger){
@@ -38,12 +39,17 @@ Template.agreements.events({
             isDeleted:0
         };
         var id = (Session.get('agreementData')) ? Session.get('agreementData')._id : '';
+        
         Meteor.call('insertAgreementTemplate', data, id, function(err, res){
             if(err){
-                console.log(err);
+                sAlert.error(err.reason, {effect: 'bouncyflip', position: 'top-right', timeout: 5000, onRouteClose: true, stack: false, offset: '80px'});
                 $('#openAgreement').modal('close');
             }else{
-                //sAlert.error(err.reason, {effect: 'bouncyflip', position: 'top-right', timeout: 2000, onRouteClose: true, stack: false, offset: '80px'});
+                if (id) {
+                    sAlert.success('Record edit successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+                }else{
+                    sAlert.success('Record add successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+                }
                 $('#openAgreement').modal('close');
             }
         });
@@ -55,7 +61,8 @@ Template.agreements.events({
             if(err){
                 console.log(err);
             }else{
-                console.log(res,'delete successfully');
+                sAlert.closeAll();
+                sAlert.success('Record delete successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
             }
         });
     },
@@ -67,7 +74,8 @@ Template.agreements.events({
             if(err){
                 console.log(err);
             }else{
-                console.log(res,'change status successfully');
+                sAlert.closeAll();
+                sAlert.success(res+' Status change successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
             }
         });
     },
