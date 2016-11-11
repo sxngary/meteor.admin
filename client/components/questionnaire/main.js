@@ -21,7 +21,6 @@ Template.questionnaire.onCreated(function () {
 Template.questionnaire.onRendered(function () {
     //handleResize();
     //$('INPUT.minicolors').minicolors();
-    tabbing();
 
     // add custom validators
     window.ParsleyValidator.addValidator('keystring',
@@ -73,40 +72,18 @@ Template.questionnaire.onRendered(function () {
     $('#questionUpdate').parsley({
         trigger: 'keyup'
     });
-    // $('textarea#helper').editable({
-    //     key: '1D4B3B3D9A2C4A4G3G3F3J3==',
-    //     inlineMode: false,
-    //     minHeight: 150,
-    //     maxHeight: 300,
-    //    imageUploadURL: '/api/upload'
-    //})// Catch image removal from the editor.
-    //.on('editable.afterRemoveImage', function (e, editor, $img) {
-    //    Meteor.call('removeFroalaImage', $img.attr('src'), function(err, res) {
-    //        if(err) console.log('image not removed');
-    //        console.log("image removed!");
-    //    })
-    //});
-    //$('textarea#questionHelper').editable({
-    //     key: '1D4B3B3D9A2C4A4G3G3F3J3==',
-    //     inlineMode: false,
-    //     minHeight: 150,
-    //     maxHeight: 300,
-    //    imageUploadURL: '/api/upload'
-    //})// Catch image removal from the editor.
-    //.on('editable.afterRemoveImage', function (e, editor, $img) {
-    //    Meteor.call('removeFroalaImage', $img.attr('src'), function(err, res) {
-    //        if(err) console.log('image not removed');
-    //        console.log("image removed!");
-    //    })
-    //});
+    $('#textarea#helper').froalaEditor();
+    $('textarea#questionHelper').froalaEditor();
 
     Session.set("questionnaireLoaded", false);
 
+    $('ul.tabs').tabs();
+    $('.modal').modal();
     if (Session.get('viaQuesForm')) {
-        Meteor.setTimeout(function () {
-            Session.set('viaQuesForm', undefined);
-            $("#qQuestionTab").trigger("click");
-        }, 500);
+        $('ul.tabs').tabs('select_tab', 'qQuestionTab');
+        Session.set("viaQuesForm", undefined);
+    } else {
+        $('ul.tabs').tabs();
     }
 });
 
@@ -122,41 +99,37 @@ Template.questionnaire.helpers({
         }
 
         if (typeof text === "string") {
-            return text;
-        }
-
-        var lang = Router.current().params['hash'];
-        if (!lang) {
-            lang = 'en';
-        }
-        //console.log('getText.lang:', lang);
-
-        var ret = "";
-        if (lang === "en") {
-            ret = text["en"];
+            var ret = text;
         } else {
-            var checkLang = _.where(text["translation"], { lang: lang });
-            if (checkLang.length) {
-                var index = _.indexOf(_.pluck(text["translation"], "lang"), lang);
-                ret = text["translation"][index]["text"];
+            var lang =  'en';
+
+            var ret = "";
+            if (lang === "en") {
+                ret = text["en"];
+            } else {
+                var checkLang = _.where(text["translation"], { lang: lang });
+                if (checkLang.length) {
+                    var index = _.indexOf(_.pluck(text["translation"], "lang"), lang);
+                    ret = text["translation"][index]["text"];
+                }
+            }
+
+            if (typeof ret === "undefined") {
+                ret = "";
             }
         }
-
-        if (typeof ret === "undefined") {
-            ret = "";
+        
+        switch (elem) {
+            case "summary":
+                $('#questionnaireSummary').froalaEditor('html.set', ret);
+                break;
+            case "helper":
+                $('#questionnairehelper').froalaEditor('html.set', ret);
+                break;
+            case "catHelper":
+                $('textarea#helper').froalaEditor('html.set', ret);
+                break;
         }
-        //switch (elem) {
-        //    case "summary":
-        //        $('#questionnaireSummary').editable("setHTML", ret);
-        //        break;
-        //    case "helper":
-        //        $('#questionnairehelper').editable("setHTML", ret);
-        //        break;
-        //    case "catHelper":
-        //        //console.log("ret:", ret)
-        //        $('textarea#helper').editable("setHTML", ret);
-        //        break;
-        //}
 
         quesformTitleDeps.depend();
         return ret;
@@ -556,9 +529,4 @@ function initializeSelectBox() {
     Meteor.setTimeout(function () {
         $('select').material_select();
     }, 1);
-}
-
-function tabbing() {
-    $('ul.tabs').tabs();
-    $('.modal').modal();
 }
