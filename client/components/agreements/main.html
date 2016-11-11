@@ -25,7 +25,10 @@
                     <span class="tooltiptext">Add New Template</span>
                 </a>
             </h1>
-            <div class="table-layout">
+            
+            {{> tabular table=TabularTables.Agreementlist class="table table-striped table-bordered table-condensed"}}
+            
+            <!--<div class="table-layout">
                 <div class="table-row news">
                     <ul class="collection table-layout">
                         <li class="collection-item row row-heading hide-on-small-only">
@@ -78,7 +81,7 @@
                         {{/if}}
                     </ul>
                 </div>
-            </div>
+            </div>-->
         </div>
     </div>
     <div id="openAgreement" class="modal modal-m ques-modal modal-fixed-footer">  
