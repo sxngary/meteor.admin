@@ -8,17 +8,11 @@ import '/client/pages/dashboard.js';
 import '/client/components/questionnaire/main.js';
 import "/lib/agreementlist.js";
 
+
 FlowRouter.route('/', {
   name: 'dashboard',
   action() {
     BlazeLayout.render('App_body', { main: 'dashboard_body' });
-  },
-});
-
-FlowRouter.route('/questionnaire', {
-  name: 'questionnaire',
-  action() {
-    BlazeLayout.render('App_body', { main: 'questionnaire' });
   },
 });
 

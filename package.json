@@ -1,4 +1,7 @@
 {
+  "name": "RegPharma-AdminApp",
+  "version": "0.0.1",
+  "description": "RegPharma-AdminApp",
   "scripts": {
     "dev": ". ./config/development/env.sh && meteor --settings ./config/development/settings.json -p $MPORT",
     "pretest": "npm run lint --silent",

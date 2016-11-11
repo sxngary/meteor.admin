@@ -332,7 +332,7 @@ Template.questionnaire.helpers({
     questionType: function () {
         return [
             { "value": 5, "title": "Radio" },
-            { "value": 8, "title": "Checkbox" },
+            { "value": 8, "title": "Multiple Select" },
         ];
     },
     equalVal: function (v1, v2) {

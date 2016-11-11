@@ -142,6 +142,7 @@
                                                     <a class="arrow deleteQuestion tooltip" id="del_{{questionId}}" data-index="{{../index}}" href="javascript:void(0);"><i class="fa fa-trash"></i><span class="tooltiptext">Delete</span></a>
                                                 </li>
                                                 {{/unless}} {{/each}}
+                                                {{#if subCategory}}
                                                 <ul class="collapsible" data-collapsible="accordion">
                                                     {{#each subCategory}}
                                                     <li>
@@ -159,6 +160,7 @@
                                                     </li>
                                                     {{/each}}
                                                 </ul>
+                                                {{/if}}
                                             </ul>
                                         </div>
                                     </li>
@@ -200,15 +202,15 @@
                 <div class="row">
                     <div class="col s12">
                         <ul class="tabs">
-                            <li class="active resp-tab-item resp-tab-active"><a href="#main">Main</a></li>
+                            <li class="tab col s3"><a href="#main">Main</a></li>
                             {{#if questionnaireData}}
-                            <li><a href="#helper">Helper</a></li>
-                            <li><a href="#questions">Questions</a></li>
+                            <li class="tab col s3"><a href="#helper">Helper</a></li>
+                            <li class="tab col s3"><a href="#questions">Questions</a></li>
                             <!-- <li>Break-Down</li> -->
                             {{/if}}
                         </ul>
 
-                        <div class="active col s12" id="main">
+                        <div class="col s12" id="main">
                             <div class="row">
                                 
                                 <div class="input-field col s12">
@@ -222,15 +224,8 @@
                                 <div class="input-field col s12">
                                     <div class="rowminus">
                                         <div class="col m8 s12">
-                                            <input type="text" id="keyString" name="keyString" value="{{getText questionnaireData.keyString}}">
-                                            <label class="{{#if questionnaireData}}active{{/if}}" for="keyString">Strap</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-field col s12">
-                                    <div class="rowminus">
-                                        <div class="col m8 s12">
-                                            <span class=" label-no-position"><label>Summary</label> </span>
+                                            <input type="text" id="strap" name="strap" value="{{getText questionnaireData.strap}}">
+                                            <label class="{{#if questionnaireData}}active{{/if}}" for="strap">Strap</label>
                                         </div>
                                     </div>
                                 </div>
@@ -238,6 +233,7 @@
                                     <div class="rowminus">
                                         <div class="col m8 s12">
                                             <textarea id="questionnaireSummary" name="questionnaireSummary" class="materialize-textarea">{{getText questionnaireData.summary "summary"}}</textarea>
+                                            <label>Summary</label>
                                         </div>
                                     </div>
                                 </div>
@@ -265,6 +261,7 @@
                             <div class="row questions-accordion">
                                 <div class="col l6 s6">
                                     <h4 class="accordion-title-sml">Available</h4>
+                                    {{#if allCategory}}
                                     <ul class="collapsible" data-collapsible="accordion">
                                         {{#each allCategory}}
                                         <li data-cat-id="{{catId}}" data-cat-index="{{index}}" class="category">
@@ -279,6 +276,7 @@
                                                         </a>
                                                     </li>
                                                     {{/each}}
+                                                    {{#if subCategory}}
                                                     <ul class="collapsible" data-collapsible="accordion">
                                                         {{#each subCategory}}
                                                         <li>
@@ -298,14 +296,17 @@
                                                         </li>
                                                         {{/each}}
                                                     </ul>
+                                                    {{/if}}
                                                 </ul>
                                             </div>
                                         </li>
                                         {{/each}}
                                     </ul>
+                                    {{/if}}
                                 </div>
                                 <div class="col l6 s6">
                                     <h4 class="accordion-title-sml">Selected</h4>
+                                    {{#if questionDrop}}
                                     <ul class="collapsible" data-collapsible="accordion" id="selectedQues">
                                         {{#each questionDrop}}
                                         <li>
@@ -343,6 +344,7 @@
                                         </li>
                                         {{/each}}
                                     </ul>
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>
@@ -528,13 +530,6 @@
                                             <div class="input-field col s12">
                                                 <div class="rowminus">
                                                     <div class="col m12 s12">
-                                                        <!-- <select name="dependencyAns" id="dependencyAns" multiple required>
-                                                            <option value="" selected>Select Answer</option>
-                                                             {{#each answerSet}}
-                                                               <option {{isSelect ansId questionUpdation.depAnswer}} value="{{ansId}}">{{ansLbl}}</option>
-                                                             {{/each}}
-                                                            </select> -->
-                                                        <span class="col label-no-position"><label>Dependency Answer</label> </span>
                                                         <select id="dependencyAns" name="dependencyAns" style="font-family:Arial;height:166.8px;" multiple="" class="default-select browser-default form-control">
                                                         {{#each answerSet}}
                                                         <option {{checkedDependentAnswer ansId}} value="{{ansId}}" style="color:green;">
@@ -543,6 +538,7 @@
                                                         </option>
                                                         {{/each}}
                                                         </select>
+                                                        <label>Dependency Answer</label>
                                                     </div>
                                                     <!--  <div class="col m4 s12 s-mb20-mob">
                                                         <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip=" Select dependency question if only display upon an answer from a previous question e.g. Requires Yes to vigorous exercise. Otherwise leave as Primary Question "><i class="mdi-action-info-outline"></i></a>

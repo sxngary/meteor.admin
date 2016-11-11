@@ -2,7 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { Questionnaires } from '/imports/api/questionnaires/questionnaires';
 import { Categories } from '/imports/api/questionnaires/categories';
 import { Questions } from '/imports/api/questionnaires/questions';
-import { Contents } from '/imports/api/contents/contents';
+import { Answers } from '/imports/api/questionnaires/answers';
+import { Cache } from '/imports/api/questionnaires/cache';
 
 Meteor.methods({
     insertQuestionnaireCategory: function (form, catId) {
@@ -25,7 +26,7 @@ Meteor.methods({
     fetchCategoryData: function (id) {
         var category = Categories.findOne({ _id: id });
         if (category.parent != "0") {
-            var parentCat = Categories.findOne({_id: category.parent});
+            var parentCat = Categories.findOne({ _id: category.parent });
             category.parentVal = parentCat.cat_name;
         }
         return category;
@@ -87,82 +88,39 @@ Meteor.methods({
 
         for (var i = 0; i < answerData.length; i++) {
             var ansID = answerData[i]["ansID"] || undefined;
-            var ansLblID = answerData[i]["ansLblID"] || undefined;
-            var ansValID = answerData[i]["ansValID"] || undefined;
             var ansLbl = answerData[i]["ansLbl"];
             var ansVal = answerData[i]["ansVal"];
             var ansRank = answerData[i]["ansRank"] || 0;
 
-            var formData = {
-                _id: ansLblID,
-                element: 'answer',
-                type: 'answer_label',
-                translation: [],
-                direct_access: ''
-            };
-            if (lang === "en") {
-                formData["en"] = ansLbl;
-            } else {
-                formData["translation"].push({
-                    "_id": new Meteor.Collection.ObjectID()._str,
-                    "lang": lang,
-                    text: ansLbl
-                });
-            }
-
-            var id = Meteor.call("insertContents", formData, ansLblID);
-            if (!ansLblID) {
-                ansLblID = id;
-            }
-
-            formData = {
-                _id: ansValID,
-                element: 'answer',
-                type: 'answer_value',
-                translation: [],
-                direct_access: ''
-            };
-            if (lang === "en") {
-                formData["en"] = ansVal;
-            } else {
-                formData["translation"].push({
-                    "_id": new Meteor.Collection.ObjectID()._str,
-                    "lang": lang,
-                    text: ansVal
-                });
-            }
-
-            id = Meteor.call("insertContents", formData, ansValID);
-            /*console.log('formData:', formData);
-            console.log('ansValID:', ansValID);
-            console.log("id:", id);*/
-            if (!ansValID) {
-                ansValID = id;
-            }
-
             var formData = {};
             formData = {
                 _id: ansID,
-                answer_text: ansLblID,
-                answer_value: ansValID,
+                answer_text: ansLbl,
+                answer_value: ansVal,
                 question: quesId,
                 rank: ansRank
             };
-            //console.log('answer:', formData);
-            Meteor.call("insertAnswer", formData, ansID);
+            if (typeof formData._id == "undefined" || ! formData._id.length) {
+                delete formData._id;
+                Meteor.call("insertAnswer", formData);
+            } else {
+                Meteor.call("insertAnswer", formData, ansID);
+            }
         }
     },
     fetchQuestions: function (id) {
-        var question = Questions.find({ category: id, dependency: [], deleted: '0' }).fetch();
-        ///return questionnaireData;
+        var question = Questions.find({
+            category: id,
+            dependency: [],
+            $or: [{ deleted: '0' }, { deleted: { $exists: false } }],
+        }).fetch();
         questionData = [];
 
         if (question.length > 0) {
 
             for (var k = 0; k < question.length; k++) {
                 var hier = 0;
-                var questionName = Contents.find({ _id: question[k].question }).fetch();
-                questionData.push({ questionId: question[k]._id, Qtitle: questionName[0].en, contentId: questionName[0]._id, keyString: question[k].key_string, gender: question[k].gender, qType: question[k].question_type, level: hier++ });
+                questionData.push({ questionId: question[k]._id, Qtitle: question[k].question, keyString: question[k].key_string, gender: question[k].gender, qType: question[k].question_type, level: hier++ });
                 recursive(question[k]._id, hier);
             }
             return questionData;
@@ -177,22 +135,18 @@ Meteor.methods({
 
         for (var a = 0; a < answers.length; a++) {
             var index = a + 1;
-            var ansLbl = Contents.findOne({ _id: answers[a].answer_text });
-            var ansVal = Contents.findOne({ _id: answers[a].answer_value });
             answerData.push({
                 ansId: answers[a]._id,
-                ansLbl: ansLbl,
-                ansVal: ansVal,
+                ansLbl: answers[a].answer_text,
+                ansVal: answers[a].answer_value,
                 index: index,
-                ansLblID: ansLbl._id,
-                ansValID: ansVal._id,
                 ansRank: answers[a].rank
             });
         }
         return answerData;
     },
     questionData: function (id) {
-        var question = Questions.findOne({ _id: id, deleted: '0' });
+        var question = Questions.findOne({ _id: id });
         if (question) {
             var questionDataArr = {};
             questionDataArr['questionSession'] = question;
@@ -202,10 +156,8 @@ Meteor.methods({
             var questionCat = Categories.findOne({ _id: question.category });
             if (questionCat) {
 
-                var catName = Contents.findOne({ _id: questionCat.cat_name });
-                var questionDef = Contents.findOne({ _id: question.question });
-                questionDataArr['catName'] = catName;
-                questionDataArr['questionDef'] = questionDef;
+                questionDataArr['catName'] = questionCat.cat_name;
+                questionDataArr['questionDef'] = question.question;
                 var questionSet = Meteor.call("fetchQuestions", question.category);
                 if (questionSet) {
                     questionDataArr['questionSet'] = questionSet;
@@ -238,38 +190,33 @@ Meteor.methods({
                 for (var i = 0; i < questionnaire[0].questions.length; i++) {
                     var mainCategory = Categories.find({ _id: questionnaire[0].questions[i].category_id, deleted: '0' }).fetch();
                     if (mainCategory.length > 0) {
-                        var mainCategoryName = Contents.find({ _id: mainCategory[0].cat_name }).fetch();
-                        if (mainCategoryName.length > 0) {
-                            if (multilingual === true) {
-                                var parentCat = mainCategoryName[0];
-                            } else {
-                                var parentCat = mainCategoryName[0].en;
-                            }
-
+                        if (multilingual === true) {
+                            var parentCat = mainCategory[0].cat_name;
+                        } else {
+                            var parentCat = mainCategory[0].cat_name;
                         }
                     }
                     var mainCatQuestion = [];
                     if (questionnaire[0].questions[i].question) {
                         if (questionnaire[0].questions[i].question.length > 0) {
                             for (var j = 0; j < questionnaire[0].questions[i].question.length; j++) {
-                                var mainQuestion = Questions.find({ _id: questionnaire[0].questions[i].question[j]._id, deleted: '0' }).fetch();
+                                var mainQuestion = Questions.find({ 
+                                    _id: questionnaire[0].questions[i].question[j]._id,
+                                    $or: [{deleted: '0'}, {deleted: {$exists: false} }] 
+                                     
+                                }).fetch();
                                 if (mainQuestion != '') {
                                     if (mainQuestion.length > 0) {
-                                        var mainQuestionName = Contents.find({ _id: mainQuestion[0].question }).fetch();
-                                        if (mainQuestionName.length > 0) {
-                                            if (multilingual === true) {
-                                                var Qtitle = mainQuestionName[0];
-                                            } else {
-                                                var Qtitle = mainQuestionName[0].en;
-                                            }
+                                        if (multilingual === true) {
+                                            var Qtitle = mainQuestion[0].question;
+                                        } else {
+                                            var Qtitle = mainQuestion[0].question;
                                         }
-                                        var mainQuesHelper = Contents.find({ _id: mainQuestion[0].helper }).fetch();
-                                        if (mainQuesHelper.length > 0) {
-                                            if (multilingual === true) {
-                                                var Qhelper = mainQuesHelper[0];
-                                            } else {
-                                                var Qhelper = mainQuesHelper[0].en;
-                                            }
+
+                                        if (multilingual === true) {
+                                            var Qhelper = mainQuestion[0].helper;
+                                        } else {
+                                            var Qhelper = mainQuestion[0].helper;
                                         }
                                     }
                                     if (questionnaire[0].questions[i].question[j].parentQsId) {
@@ -307,36 +254,31 @@ Meteor.methods({
                         for (var k = 0; k < questionnaire[0].questions[i].subCategories.length; k++) {
                             var subCategory = Categories.find({ _id: questionnaire[0].questions[i].subCategories[k].subCategory_id }).fetch();
                             if (subCategory.length > 0) {
-                                var subCategoryName = Contents.find({ _id: subCategory[0].cat_name }).fetch();
-                                if (subCategoryName.length > 0) {
-                                    if (multilingual === true) {
-                                        var subCatTitle = subCategoryName[0];
-                                    } else {
-                                        var subCatTitle = subCategoryName[0].en;
-                                    }
+                                if (multilingual === true) {
+                                    var subCatTitle = subCategory[0].cat_name;
+                                } else {
+                                    var subCatTitle = subCategory[0].cat_name;
                                 }
                             }
 
                             var SubcatQuestions = [];
                             for (var l = 0; l < questionnaire[0].questions[i].subCategories[k].questions.length; l++) {
-                                var subQuestion = Questions.find({ _id: questionnaire[0].questions[i].subCategories[k].questions[l]._id, deleted: '0' }).fetch();
+                                var subQuestion = Questions.find({ 
+                                    _id: questionnaire[0].questions[i].subCategories[k].questions[l]._id, 
+                                    $or: [{deleted: '0'}, {deleted: {$exists: false} }]
+                                }).fetch();
                                 if (subQuestion != '') {
                                     if (subQuestion.length > 0) {
-                                        var subQuestionName = Contents.find({ _id: subQuestion[0].question }).fetch();
-                                        if (subQuestionName.length > 0) {
-                                            if (multilingual === true) {
-                                                var Qtitle = subQuestionName[0];
-                                            } else {
-                                                var Qtitle = subQuestionName[0].en;
-                                            }
+                                        if (multilingual === true) {
+                                            var Qtitle = subQuestion[0].question;
+                                        } else {
+                                            var Qtitle = subQuestion[0].question;
                                         }
-                                        var subQuesHelper = Contents.find({ _id: subQuestion[0].helper }).fetch();
-                                        if (subQuesHelper.length > 0) {
-                                            if (multilingual === true) {
-                                                var Qhelper = subQuesHelper[0];
-                                            } else {
-                                                var Qhelper = subQuesHelper[0].en;
-                                            }
+
+                                        if (multilingual === true) {
+                                            var Qhelper = subQuestion[0].helper;
+                                        } else {
+                                            var Qhelper = subQuestion[0].helper;
                                         }
                                     }
                                     if (questionnaire[0].questions[i].subCategories[k].questions[l].parentQsId) {
@@ -406,7 +348,7 @@ Meteor.methods({
     },
     questionnaireListing: function () {
         var questionnair = Questionnaires.find({
-            $or: [{deleted: '0'}, {deleted: {$exists: false} }]
+            $or: [{ deleted: '0' }, { deleted: { $exists: false } }]
         }).fetch();
         if (questionnair.length > 0) {
             var questionnaireData = [];
@@ -456,8 +398,7 @@ Meteor.methods({
         var result = Meteor.call('questionnaireQuestionArray', questionnaire_id, multilingual);
         var questionnaire = Questionnaires.find({ _id: questionnaire_id }).fetch();
         if (questionnaire.length > 0) {
-            var questionnaireName = Contents.find({ _id: questionnaire[0].title }).fetch();
-            returnArr.questionnaireName = questionnaireName[0].en;
+            returnArr.questionnaireName = questionnaire[0].title;
         }
 
         var finalArr = [];
@@ -534,15 +475,15 @@ Meteor.methods({
             });
             finalArr[i]["answerSet"] = answerSet;
 
-            for (var i2 = 0; i2 < answerSet.length; i2++) {
+            /*for (var i2 = 0; i2 < answerSet.length; i2++) {
                 finalArr[i]["answerSet"][i2]["index"] = (i2 + 1);
                 var answer = answerSet[i2];
                 contentsArr.push(answer.ansLbl);
                 contentsArr.push(answer.ansVal);
-            }
+            }*/
         }
 
-        var contentsVal = Contents.find({ _id: { $in: contentsArr } }).fetch();
+        /*var contentsVal = Contents.find({ _id: { $in: contentsArr } }).fetch();
         for (var i = 0; i < finalArr.length; i++) {
             var answerSet = finalArr[i]["answerSet"];
             if (answerSet.length) {
@@ -567,7 +508,7 @@ Meteor.methods({
                 }
                 finalArr[i]["answerSet"] = answerSet;
             }
-        }
+        }*/
 
         returnArr.questionnaireDetail = finalArr;
 
@@ -607,8 +548,6 @@ Meteor.methods({
         for (var i = 0; i < answers.length; i++) {
             var ans = [answers[i]];
             if (ans.length > 0) {
-                var ansLbl = Contents.find({ _id: ans[0].answer_text }).fetch();
-                var ansVal = Contents.find({ _id: ans[0].answer_value }).fetch();
                 if (typeof ans[0].rank == 'undefined' || isNaN(ans[0].rank)) {
                     ans[0].rank = 0;
                 }
@@ -617,8 +556,8 @@ Meteor.methods({
                     ansArray.push({
                         questionId: ans[0].question,
                         ansId: ans[0]._id,
-                        ansLbl: ansLbl[0],
-                        ansVal: ansVal[0],
+                        ansLbl: ans[0].answer_text,
+                        ansVal: ans[0].answer_value,
                         index: (i + 1),
                         rank: ans[0].rank
                     });
@@ -626,8 +565,8 @@ Meteor.methods({
                     ansArray.push({
                         questionId: ans[0].question,
                         ansId: ans[0]._id,
-                        ansLbl: ansLbl[0].en,
-                        ansVal: ansVal[0].en,
+                        ansLbl: ans[0].answer_text,
+                        ansVal: ans[0].answer_value,
                         index: (i + 1),
                         rank: ans[0].rank
                     });
@@ -751,4 +690,21 @@ Meteor.methods({
           }
         }*/
     },
-})
+});
+
+function recursive(id, lvl) {
+    lvl + 1;
+
+    var question = Questions.find({ 
+        "dependency.dependencyQuestion": id, 
+        $or: [{ deleted: '0' }, { deleted: { $exists: false } }], 
+    }).fetch();
+    if (question.length > 0) {
+
+        for (var k = 0; k < question.length; k++) {
+            questionData.push({ questionId: question[k]._id, parentQsId: id, Qtitle: question[k].question, keyString: question[k].key_string, gender: question[k].gender, qType: question[k].question_type, level: lvl });
+            recursive(question[k]._id, lvl + 1);
+
+        }
+    }
+}
