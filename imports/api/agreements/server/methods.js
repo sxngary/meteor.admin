@@ -25,7 +25,7 @@ Meteor.methods({
     //------change status---------//
     statusAgreementTemplate:function(id,status){
         if (id) {
-            if (status) {
+            if (status=="true") {
                 var result = Agreements.update({_id:id}, { $set: {status:false} });
                 if (result) {
                     return "Inactive";

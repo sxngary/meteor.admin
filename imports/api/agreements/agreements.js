@@ -23,6 +23,9 @@ Agreements.schema = new SimpleSchema({
     agreementBody: {
         type: String
     },
+    signaturePad: {
+        type: Boolean
+    },
     status: {
         type: Boolean
     },

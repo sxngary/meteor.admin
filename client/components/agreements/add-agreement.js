@@ -17,3 +17,12 @@ Template.addAgreement.onRendered(function(){
         trigger: 'keyup'
     });
 });
+
+
+Template.viewAgreement.helpers({
+    viewAgreementData : function(){
+        if(Session.get('viewAgreementData')){
+	    return Session.get('viewAgreementData');
+	}
+    }   
+});

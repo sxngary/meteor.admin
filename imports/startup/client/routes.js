@@ -5,7 +5,6 @@ import { AccountsTemplates } from 'meteor/useraccounts:core';
 import '/client/layouts/app-body.js';
 import '/client/pages/app-not-found.js';
 import '/client/pages/dashboard.js';
-import '/client/components/questionnaire/main.js';
 import "/lib/agreementlist.js";
 
 

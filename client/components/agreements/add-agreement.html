@@ -42,6 +42,22 @@
                     <div class="col m12">
                         <div class="row">
                             <div class="col s1 stepno">4</div>
+                            <div class="switch">
+                                <div class="col m1"><label>Signature Pad</label></div>
+                                <label>
+                                  Off
+                                  <input type="checkbox" id="signature_pad" checked="{{#if agreementData.signaturePad}} checked {{/if}}">
+                                  <span class="lever"></span>
+                                  On
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col m12">
+                        <div class="row">
+                            <div class="col s1 stepno">5</div>
                             <div class="input-field col m8 mt40">
                                 <label for="body" class="mb20 setted">Agreement Body</label>
                                 <textarea id="agreement_body" name="agreement_body" class="text-small" required></textarea>
