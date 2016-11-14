@@ -178,7 +178,10 @@ Meteor.methods({
         }
     },
     questionnaireQuestionArray: function (id, multilingual) {
-        var questionnaire = Questionnaires.find({ _id: id, deleted: '0' }).fetch();
+        var questionnaire = Questionnaires.find({ 
+            _id: id,
+            $or: [{deleted: '0'}, {deleted: {$exists: false} }]
+        }).fetch();
         //return questionnaire;
         var allQuestionArray = [];
         if (questionnaire.length > 0) {
@@ -188,7 +191,10 @@ Meteor.methods({
                 });
                 //console.log('questionnaire.questions:', questionnaire[0].questions);
                 for (var i = 0; i < questionnaire[0].questions.length; i++) {
-                    var mainCategory = Categories.find({ _id: questionnaire[0].questions[i].category_id, deleted: '0' }).fetch();
+                    var mainCategory = Categories.find({ 
+                        _id: questionnaire[0].questions[i].category_id,
+                        $or: [{deleted: '0'}, {deleted: {$exists: false} }] 
+                    }).fetch();
                     if (mainCategory.length > 0) {
                         if (multilingual === true) {
                             var parentCat = mainCategory[0].cat_name;

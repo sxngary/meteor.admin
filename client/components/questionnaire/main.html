@@ -17,6 +17,8 @@
                             <thead>
                                 <tr>
                                     <th>Title</th>
+                                    <th>Created Date</th>
+                                    <th>Modified Date</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
@@ -24,7 +26,8 @@
                             {{#each questionnaireListing}}
                             <tr style="">
                                 <td><a href="javascript:void(0);" id="{{questionnaireId}}" class="modal-trigger questionnaire">{{title}}</a></td>
-
+                                <td>{{createdAt}}</td>
+                                <td>{{modifiedAt}}</td>
                                 <td>
                                     <a href="#" class="icondelete deleteQuestionnaire tooltip" id="del_{{questionnaireId}}"><i class="fa fa-trash-o fa-lg"></i><span class="tooltiptext">Delete</span></a>
                                     <!--<a href="#" class="iconprint printQuestionnaire tooltip" id="print_{{questionnaireId}}"><i class="fa fa-print fa-lg"></i><span class="tooltiptext">Print</span></a>-->

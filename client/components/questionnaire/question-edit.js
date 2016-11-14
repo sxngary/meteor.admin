@@ -15,20 +15,7 @@ Template.questionForm.onCreated(function () {
     Meteor.call("questionData", qId, function (error, questionData) {
         console.log("questionData:", questionData);
         if (questionData.questionSession != undefined) {
-            /*$('textarea#questionHelper').editable({
-              key: '1D4B3B3D9A2C4A4G3G3F3J3==',
-              inlineMode: false,
-              minHeight: 100,
-              maxHeight: 100,
-             imageUploadURL: '/api/upload',
-            }) // Catch image removal from the editor.
-            .on('editable.afterRemoveImage', function (e, editor, $img) {
-                Meteor.call('removeFroalaImage', $img.attr('src'), function(err, res) {
-                    if(err) console.log('image not removed');
-                    
-                    console.log("image removed!");
-                })
-            });*/
+            $('textarea#questionHelper').froalaEditor();
             Session.set("questionSession", questionData.questionSession);
             Session.set("responseRR", questionData.questionSession.riskRatio);
             var catName = questionData.catName;
@@ -123,6 +110,12 @@ Template.questionForm.onRendered(function () {
         if (questionIsLoaded) {
             $('#questionPopup').modal();
             $('#questionPopup').modal("open", { dismissible: false });
+            if (Session.get("viaNewQues")) {
+                Meteor.setTimeout(function() {
+                    $('ul.tabs').tabs({select_tab: "secondQuestionTab"});
+                    Session.set("viaNewQues", undefined);
+                }, 400);
+            }
 
             $('#questionAdd').parsley({
                 trigger: 'keyup'
@@ -131,37 +124,9 @@ Template.questionForm.onRendered(function () {
                 trigger: 'keyup'
             });
 
-            /*Meteor.setTimeout(function() {
-                $('textarea#helper').editable({
-                     key: '1D4B3B3D9A2C4A4G3G3F3J3==',
-                     inlineMode: false,
-                     minHeight: 150,
-                     maxHeight: 300,
-                     imageUploadURL: '/api/upload',
-                 }) // Catch image removal from the editor.
-                .on('editable.afterRemoveImage', function (e, editor, $img) {
-                    Meteor.call('removeFroalaImage', $img.attr('src'), function(err, res) {
-                        if(err) console.log('image not removed');
-                        
-                        console.log("image removed!");
-                    })
-                });
-                $('textarea#questionHelper').editable({
-                     key: '1D4B3B3D9A2C4A4G3G3F3J3==',
-                     inlineMode: false,
-                     minHeight: 150,
-                     maxHeight: 300,
-                     imageUploadURL: '/api/upload',
-                }) // Catch image removal from the editor.
-                .on('editable.afterRemoveImage', function (e, editor, $img) {
-                    Meteor.call('removeFroalaImage', $img.attr('src'), function(err, res) {
-                        if(err) console.log('image not removed');
-                        
-                        console.log("image removed!");
-                    })
-                });
-
-            }, 500);*/
+            Meteor.setTimeout(function() {
+                $('textarea#questionHelper').froalaEditor();
+            }, 500);
         }
     });
 });
