@@ -15,7 +15,6 @@ Template.questionForm.onCreated(function () {
     Meteor.call("questionData", qId, function (error, questionData) {
         console.log("questionData:", questionData);
         if (questionData.questionSession != undefined) {
-            $('textarea#questionHelper').froalaEditor();
             Session.set("questionSession", questionData.questionSession);
             Session.set("responseRR", questionData.questionSession.riskRatio);
             var catName = questionData.catName;
@@ -108,7 +107,11 @@ Template.questionForm.onRendered(function () {
         var questionIsLoaded = Session.get('questionIsLoaded');
 
         if (questionIsLoaded) {
-            $('#questionPopup').modal();
+            $("#questionPopup").modal({
+                ready: function() {
+                    $('textarea#questionHelper').froalaEditor();
+                }
+            });
             $('#questionPopup').modal("open", { dismissible: false });
             if (Session.get("viaNewQues")) {
                 Meteor.setTimeout(function() {
@@ -124,9 +127,6 @@ Template.questionForm.onRendered(function () {
                 trigger: 'keyup'
             });
 
-            Meteor.setTimeout(function() {
-                $('textarea#questionHelper').froalaEditor();
-            }, 500);
         }
     });
 });
@@ -336,31 +336,32 @@ var questionFormHelpers = {
             return;
         }
 
+        let ret = "";
         if (typeof text === "string") {
-            return text;
-        }
-
-        var lang = "en";
-        //console.log('getText.lang:', lang);
-
-        var ret = "";
-        if (lang === "en") {
-            ret = text["en"];
+            ret = text;
         } else {
-            var checkLang = _.where(text["translation"], { lang: lang });
-            if (checkLang.length) {
-                var index = _.indexOf(_.pluck(text["translation"], "lang"), lang);
-                ret = text["translation"][index]["text"];
-            }
-        }
 
-        if (typeof ret === "undefined") {
-            ret = "";
+            var lang = "en";
+            //console.log('getText.lang:', lang);
+
+            if (lang === "en") {
+                ret = text["en"];
+            } else {
+                var checkLang = _.where(text["translation"], { lang: lang });
+                if (checkLang.length) {
+                    var index = _.indexOf(_.pluck(text["translation"], "lang"), lang);
+                    ret = text["translation"][index]["text"];
+                }
+            }
+
+            if (typeof ret === "undefined") {
+                ret = "";
+            }
+
         }
         switch (elem) {
             case "quesHelper":
-                //console.log("ret:", ret)
-                $('#questionHelper').editable("setHTML", ret);
+                $('#questionHelper').froalaEditor('html.set', ret);
                 break;
             case "rrResponse":
                 Meteor.setTimeout(function () {

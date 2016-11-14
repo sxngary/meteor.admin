@@ -2,7 +2,12 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 
 Template.questionForm.events({
     'click #openModal': function () {
-        $('#questionPopup').modal("open");
+        $("#questionPopup").modal({
+            ready: function() {
+                $('textarea#questionHelper').froalaEditor();
+            }
+        });
+        $('#questionPopup').modal("open", { dismissible: false });
     },
     'click #questionClose': function (event, data) {
 		/*Session.set('questionSession','');

@@ -72,8 +72,6 @@ Template.questionnaire.onRendered(function () {
     $('#questionUpdate').parsley({
         trigger: 'keyup'
     });
-    $('#textarea#helper').froalaEditor();
-    $('textarea#questionHelper').froalaEditor();
 
     Session.set("questionnaireLoaded", false);
 
@@ -98,12 +96,12 @@ Template.questionnaire.helpers({
             return;
         }
 
+        let ret = "";
         if (typeof text === "string") {
-            var ret = text;
+            ret = text;
         } else {
             var lang =  'en';
 
-            var ret = "";
             if (lang === "en") {
                 ret = text["en"];
             } else {

@@ -108,8 +108,13 @@ Template.questionnaire.events({
 		Session.set("categoryDetail", undefined);
 		Session.set("disease", undefined);
 		$('#questionnaireCatAdd')[0].reset();
+		$('#categoriesPopup').modal({
+			ready: function() {
+				$('textarea#summary').froalaEditor();
+				$('ul.tabs').tabs();
+			}
+		});
 		$('#categoriesPopup').modal("open");
-
 	},
 	'submit #questionnaireCatAdd': function (event, data) {
 		event.preventDefault();
@@ -194,11 +199,21 @@ Template.questionnaire.events({
 
 					//$('#cat_color.minicolors').minicolors('value', data.cat_color);
 					//$('#question_color.minicolors').minicolors('value', data.question_color);
-					$('#categoriesPopup').modal("open", {
-						ready: function () {
+					$('#categoriesPopup').modal({
+						ready: function() {
 							$('textarea#helper').froalaEditor();
+							$('textarea#summary').froalaEditor();
+							
+							if (typeof data.helper !== "undefined" && data.helper.length > 0) {
+								$('textarea#helper').froalaEditor('html.set', data.helper);
+							}
+							if (typeof data.summary !== "undefined" && data.summary.length > 0) {
+								$('textarea#summary').froalaEditor('html.set', data.summary);
+							}
+							$('ul.tabs').tabs();
 						}
 					});
+					$('#categoriesPopup').modal("open");
 
 				}
 			});
@@ -273,6 +288,12 @@ Template.questionnaire.events({
 
 		$('#questionnaireAdd')[0].reset();
 		$('.collapsible').collapsible();
+		$('#questionnairePopup').modal({
+			ready: function() {
+    			$('textarea#questionnairehelper').froalaEditor();
+				$('ul.tabs').tabs();
+			}
+		});
 		$('#questionnairePopup').modal('open');
 	},
 	'submit #questionnaireAdd': function (event, data) {
@@ -487,31 +508,25 @@ Template.questionnaire.events({
 				summary: questionnaireData[0].summary,
 				helper: questionnaireData[0].helper
 			});
-			if (questionnaireData[0].image_name) {
-				var imgArray = questionnaireData[0].image_name.split('-');
-				var img_length = imgArray.length - 1;
-				var imgName = imgArray[img_length];
-				completeArr[0].questionnaire.image_name = imgName;
-			}
 		}
-		$('#questionnairePopup').modal("open", {
+		$('#questionnairePopup').modal({
 			ready: function () {
 				$('#questionnaireUpdate').parsley().reset();
 				$('textarea#questionnairehelper').froalaEditor();
 				$('textarea#questionnaireSummary').froalaEditor();
 				
 				$('.loader-bg').hide();
-				if (typeof helper[0].en !== "undefined" && helper[0].en.length > 0) {
+				if (typeof questionnaireData[0].helper !== "undefined" && questionnaireData[0].helper.length > 0) {
 					$('#questionnairehelper').froalaEditor('html.set', questionnaireData[0].helper);
 				}
-				if (typeof summary[0].en !== "undefined" && summary[0].en.length > 0) {
+				if (typeof questionnaireData[0].summary !== "undefined" && questionnaireData[0].summary.length > 0) {
 					$('#questionnaireSummary').froalaEditor('html.set', questionnaireData[0].summary);
 				}
 
 				$('ul.tabs').tabs();
 			}
 		});
-
+		$('#questionnairePopup').modal("open");
 
 		Session.set("questionnaireItem", completeArr);
 	},

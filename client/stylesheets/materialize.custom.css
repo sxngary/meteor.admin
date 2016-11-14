@@ -15,6 +15,6 @@ a {
 .modal-content.content-height ul:first-of-type{margin-top: 0;}
 .modal.lesson-popup.modal-fixed-footer .modal-header{position:relative; z-index:9999;}
 .modal.modal-fixed-footer .modal-footer{z-index: 999;}
-/*.input-field label {
+#secondQuestionTab .input-field label {
     position: relative!important;
-}*/
+}
