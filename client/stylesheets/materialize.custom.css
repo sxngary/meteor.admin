@@ -18,3 +18,5 @@ a {
 #secondQuestionTab .input-field label {
     position: relative!important;
 }
+.select-wrapper input.select-dropdown { display:none !important;}
+.select-wrapper span.caret { display:none !important;}
