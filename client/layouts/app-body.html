@@ -1,10 +1,24 @@
 <template name="App_body">
-  {{> App_navHeader}}
-  <div class="content-overlay"></div>
-  <div id="content-container">
-    <div class="container">
-      {{> Template.dynamic template=main}}
-      {{> sAlert}}
-    </div>
-  </div>
+    {{> app_navHeader}}
+    <main>
+        <section class="row">
+            <section class="col s12 m12 l11">
+                {{#if currentUser}}
+                <section class="dash-links">
+                    <nav>
+                        <div class="nav-wrapper">
+                            <div class="col s12">
+                                <a href="#!" class="breadcrumb">First</a>
+                                <a href="#!" class="breadcrumb">Second</a>
+                                <a href="#!" class="breadcrumb">Third</a>
+                            </div>
+                        </div>
+                     </nav>
+                </section>
+                {{/if}}
+                {{> Template.dynamic template=main}}
+                {{> sAlert}}
+            </section>
+        </section>
+    </main>
 </template>

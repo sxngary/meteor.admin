@@ -1,33 +1,54 @@
-<template name="App_navHeader">
-  <nav>
-      <div class="nav-wrapper">
-
-        <a href="#" class="brand-logo">RPM</a>
-        <a href="javascript:;" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-        <ul class="right hide-on-med-and-down">
-          {{#if currentUser}}
-            <li><a href="/" class="dashboard">Dashboard</a></li>
-            <li><a href="/questionnaire" class="questionnaire">Questionnaire</a></li>
-            <li><a href="/agreements" class="agreements">Agreements</a></li>
-            <li><a class="logout">{{_ 'Logout'}}</a></li>
-          {{else}}
-            <li class="{{isActiveRoute 'signin'}}"><a href="{{pathFor 'signin'}}" >{{_ 'Sign In'}}</a></li>
-            <li class="{{isActiveRoute 'join'}}"><a href="{{pathFor 'join'}}" >{{_ 'Join'}}</a></li>
-          {{/if}}
-        </ul>
-
-        <ul class="side-nav" id="mobile-demo">
-          {{#if currentUser}}
-            <li><a href="/" class="dashboard">Dashboard</a></li>
-            <li><a href="/questionnaire" class="questionnaire">Questionnaire</a></li>
-            <li><a href="/agreements" class="agreements">Agreements</a></li>
-            <li><a class="logout">{{_ 'Logout'}}</a></li>
-          {{else}}
-            <li class="{{isActiveRoute 'signin'}}"><a href="{{pathFor 'signin'}}" >{{_ 'Sign In'}}</a></li>
-            <li class="{{isActiveRoute 'join'}}"><a href="{{pathFor 'join'}}" >{{_ 'Join'}}</a></li>
-          {{/if}}
-        </ul>
-        
-      </div>
-  </nav>  
+<template name="app_navHeader">
+    <header>
+        <section class="row head-brk">
+            <nav class="col s12">
+                <section class="nav-wrapper">
+                    <a href="#!" class="brand-logo"><img src="images/logo.png" alt=""/></a>
+                    
+                    <ul class="right hide-on-med-and-down">
+                        {{#if currentUser}}
+                            <li><a href="#"><i class="zmdi zmdi-assignment-alert"></i></a></li>
+                            <li class="admin-ac"><a href="#">John <i class="zmdi zmdi-account"></i></a></li>
+                        {{else}}
+                            <li class="bold {{isActiveRoute 'signin'}}"><a href="{{pathFor 'signin'}}" class="waves-effect" >{{_ 'Sign In'}}</a></li>
+                            <li class="bold {{isActiveRoute 'join'}}"><a href="{{pathFor 'join'}}" class="waves-effect" >{{_ 'Join'}}</a></li>
+                        {{/if}}
+                    </ul>
+                </section>
+            </nav>
+        </section>
+    <section class="container">
+        <a href="#" data-activates="nav-mobile" class="button-collapse top-nav full hide-on-large-only">
+            <i class="material-icons">menu</i>
+        </a>
+    </section>
+    <ul id="nav-mobile" class="side-nav left-bar fixed">
+        {{#if currentUser}}
+            <li class="admin-pro">
+                <!--<img src="images/admin.png" alt=""/>-->
+                <h2>Admin</h2>
+            </li>
+            <li class="bold"><a href="/"  class="waves-effect waves-tea"><i class="zmdi zmdi-view-dashboard"></i> Dashboard</a></li>
+            <ul class="collapsible collapsible-accordion">
+                <li class="bold"><a href="#" class="collapsible-header  waves-effect"><i class="zmdi zmdi-plus-square"></i> User Management<span><i class="zmdi zmdi-chevron-right"></i></span></a>
+                <section class="collapsible-body">
+                    <ul>
+                        <li><a href="#" >Provider</a></li>
+                        <li><a href="#" >Patient</a></li>
+                    </ul>
+                </section>
+                </li>
+            </ul>
+            <li class="bold"><a href="/questionnaire" class="waves-effect"><i class="zmdi zmdi-rss"></i> Questionnaire</a></li>
+            <li class="bold"><a href="/agreements" class="waves-effect"><i class="zmdi zmdi-chart"></i> Agreements</a></li>
+            <!--<li class="bold"><a href="#" class="waves-effect"><i class="zmdi zmdi-laptop"></i> Education Management</a></li>
+            <li class="bold"><a href="#" class="waves-effect"><i class="zmdi zmdi-account"></i> My Account</a></li>-->
+            <li class="bold logout"><a class="waves-effect"><i class="zmdi zmdi-lock"></i>{{_ 'Logout'}}</a></li>
+        {{else}}
+            <li class="admin-pro"></li>
+            <li class="bold {{isActiveRoute 'signin'}}"><a href="{{pathFor 'signin'}}" class="waves-effect" >{{_ 'Sign In'}}</a></li>
+            <li class="bold {{isActiveRoute 'join'}}"><a href="{{pathFor 'join'}}" class="waves-effect" >{{_ 'Join'}}</a></li>
+        {{/if}}
+    </ul>
+    </header>
 </template>
