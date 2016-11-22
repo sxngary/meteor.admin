@@ -1,10 +1,12 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 FlowRouter.route('/questionnaire', {
-  name: 'questionnaire',
-  action() {
-    BlazeLayout.render('App_body', { main: 'questionnaire' });
-  }
+    name: 'questionnaire',
+    parent: 'dashboard',
+    title: 'Questionnaire',
+    action() {
+        BlazeLayout.render('App_body', { main: 'questionnaire' });
+    }
 });
 
 FlowRouter.route("/question/:id", {

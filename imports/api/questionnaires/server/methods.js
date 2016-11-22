@@ -31,19 +31,36 @@ Meteor.methods({
         }
         return category;
     },
+    
+    //-------insert questionnaire------rpm----//
     insertQuestionnaire: function (form, catId) {
         //console.log('form data::',form);
+        var result = {};
         if (catId) {
-            //console.log("Update data:",form)
-            return Questionnaires.update({ _id: catId }, { $set: form });
+            var resultUpdate = Questionnaires.update({ _id: catId }, { $set: form });
+            if (resultUpdate) {
+                result['status'] = true;
+                result['msg'] = 'Questionnaire updated successfully!';
+            }
         } else {
-            //console.log("Insert data:",form)
-            var id = Questionnaires.insert(form);
-            if (id) {
-                return id;
+            if (form.questionnaireKey) {
+                var resultExists = Questionnaires.find({questionnaireKey:form.questionnaireKey}).fetch();
+                if (resultExists.length>0) {
+                    result['status'] = false;
+                    result['msg'] = "Questionnaire name already exist.";    
+                }else{
+                    var id = Questionnaires.insert(form);
+                    if (id) {
+                        result['status'] = true;
+                        result['msg'] = 'Questionnaire added successfully!';
+                    }else{
+                        result['status'] = false;
+                        result['msg'] = "Questionnaire not added successfully!";
+                    }    
+                }
             }
         }
-
+        return result;    
     },
     insertQuestion: function (form, catId) {
         //console.log('form data::',form);
@@ -352,25 +369,28 @@ Meteor.methods({
             }
         }
     },
+    
+    //----------Questionnaire list------rpm-----//
     questionnaireListing: function () {
         var questionnair = Questionnaires.find({
             $or: [{ deleted: '0' }, { deleted: { $exists: false } }]
         }).fetch();
         if (questionnair.length > 0) {
-            var questionnaireData = [];
-            for (var i = 0; i < questionnair.length; i++) {
-                questionnaireData.push({
-                    questionnaireId: questionnair[i]._id,
-                    title: questionnair[i].title,
-                    img_name: questionnair[i].image_name
-                });
-            }
+            //var questionnaireData = [];
+            //for (var i = 0; i < questionnair.length; i++) {
+            //    questionnaireData.push({
+            //        questionnaireId: questionnair[i]._id,
+            //        title: questionnair[i].title,
+            //        img_name: questionnair[i].image_name
+            //    });
+            //}
 
-            return questionnaireData;
+            return questionnair;
         } else {
             return [];
         }
     },
+    
     questionnaireData: function (questionnaire_id, multilingual) {
         // return from cache, if available
         var cache = Cache.findOne({ questionnaire_id: questionnaire_id });

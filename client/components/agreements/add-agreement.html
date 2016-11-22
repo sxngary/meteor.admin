@@ -10,7 +10,7 @@
                         <div class="row">
                             <div class="col s1 stepno">1</div>
                             <div class="input-field col m8 mt40">
-                                <input type="text" name="agreement_name" id="agreement_name" value="{{agreementData.agreementName}}" required >
+                                <input type="text" name="agreement_name" id="agreement_name" value="{{agreementData.agreementName}}" required data-parsley-pattern="/^[A-Za-z0-9\s]+$/">
                                 <label for="agreement_name" class="{{#if agreementData}} active {{/if}}">Agreement name</label>
                             </div>
                         </div>
@@ -21,7 +21,7 @@
                         <div class="row">
                             <div class="col s1 stepno">2</div>
                             <div class="input-field col m8 mt40">
-                                <input type="text" name="agreement_title" id="agreement_title" value="{{agreementData.agreementTitle}}" required>
+                                <input type="text" name="agreement_title" id="agreement_title" value="{{agreementData.agreementTitle}}" required data-parsley-pattern="/^[A-Za-z0-9\s]+$/">
                                 <label for="agreement_title" class="{{#if agreementData}} active {{/if}}">Agreement Title</label>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                         <div class="row">
                             <div class="col s1 stepno">3</div>
                             <div class="input-field col m8 mt40">
-                                <input type="text" name="agreement_category" id="agreement_category" value="{{agreementData.agreementCategory}}" required>
+                                <input type="text" name="agreement_category" id="agreement_category" value="{{agreementData.agreementCategory}}" data-parsley-pattern="/^[A-Za-z0-9\s]+$/">
                                 <label for="agreement_category" class="{{#if agreementData}} active {{/if}}">Agreement Category</label>
                             </div>
                         </div>

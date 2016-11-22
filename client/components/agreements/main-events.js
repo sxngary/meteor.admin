@@ -3,7 +3,7 @@ import { Agreements } from '/imports/api/agreements/agreements.js';
 Template.agreements.events({
     'click .addTemplate': function(event, template){
         event.preventDefault();
-        
+        $('#frmAgreement')[0].reset();
         $('#openAgreement').modal("open");
     },
     
@@ -25,12 +25,16 @@ Template.agreements.events({
     
     'submit #frmAgreement': function(event,tmp){
         event.preventDefault();
+        var agreementName = $('#agreement_name').val();
+        var agreementKey = agreementName.toLowerCase().split(" ").join("_");
+        
         data  = { 
-            agreementName: $('#agreement_name').val(), 
+            agreementName: $('#agreement_name').val(),
+            agreementKey: agreementKey,
             agreementTitle: $('#agreement_title').val(), 
             agreementCategory: $('#agreement_category').val(), 
             agreementBody: $('#agreement_body').val(),
-            signaturePad:tmp.find('#signature_pad').checked,
+            signaturePad: tmp.find('#signature_pad').checked,
             status:true,  
             isDeleted:0
         };
@@ -43,12 +47,14 @@ Template.agreements.events({
                 sAlert.error(err.reason, {effect: 'bouncyflip', position: 'top-right', timeout: 5000, onRouteClose: true, stack: false, offset: '80px'});
                 $('#openAgreement').modal('close');
             }else{
-                if (id) {
-                    sAlert.success('Record edit successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+                //console.log(res);
+                if (res.status) {
+                    sAlert.success(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+                    $('#openAgreement').modal('close');
                 }else{
-                    sAlert.success('Record add successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+                    sAlert.error(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 5000, onRouteClose: true, stack: false, offset: '80px'});
                 }
-                $('#openAgreement').modal('close');
+                
             }
         });
     },

@@ -71,12 +71,20 @@ Schema.Questionnaires = new SimpleSchema({
         type: String,
         optional: true
     },
+    questionnaireKey: {
+        type: String,
+        optional: true
+    },
     summary: {
         type: String,
         optional: true
     },
     helper: {
         type: String,
+        optional: true
+    },
+    status: {
+        type: Boolean,
         optional: true
     },
     deleted: {

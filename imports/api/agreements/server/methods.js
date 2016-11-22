@@ -5,14 +5,36 @@ Meteor.methods({
     
     //----Add and edit Agreements-----//
     insertAgreementTemplate:function(data,id){
+        //console.log(data,id,'data,id');
+        var result = {};
         if (id) {
-            return Agreements.update({_id:id}, { $set: data });
+            var resultUpdate = Agreements.update({_id:id}, { $set: data });
+            if (resultUpdate) {
+                result['status'] = true;
+                result['msg'] = "Record edit successfully!";
+            }else{
+                result['status'] = false;
+                result['msg'] = "Something wrong.";
+            }
         }else{
-            var id = Agreements.insert(data);
-            if (id) {
-                return id;
+            if (data.agreementKey) {
+                var resultExists = Agreements.find({agreementKey:data.agreementKey}).fetch();
+                if (resultExists.length>0) {
+                    result['status'] = false;
+                    result['msg'] = "Agreement name already exist.";    
+                }else{
+                    var id = Agreements.insert(data);
+                    if (id) {
+                        result['status'] = true;
+                        result['msg'] = "Agreement add successfully!";
+                    }else{
+                        result['status'] = false;
+                        result['msg'] = "Agreement not add successfully!";
+                    }    
+                }
             }
         }
+        return result;
     },
     
     //--------delete Agreements-------//

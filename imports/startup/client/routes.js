@@ -6,20 +6,23 @@ import '/client/layouts/app-body.js';
 import '/client/pages/app-not-found.js';
 import '/client/pages/dashboard.js';
 import "/lib/agreementlist.js";
-
+import "/lib/commonfunction.js";
 
 FlowRouter.route('/', {
-  name: 'dashboard',
-  action() {
-    BlazeLayout.render('App_body', { main: 'dashboard_body' });
-  },
+    name: 'dashboard',
+    title: 'Dashboard',
+    action() {
+      BlazeLayout.render('App_body', { main: 'dashboard_body' });
+    },
 });
 
 FlowRouter.route('/agreements', {
-  name: 'agreements',
-  action() {
-    BlazeLayout.render('App_body', { main: 'agreements' });
-  },
+    name: 'agreements',
+    parent: 'dashboard',
+    title: 'Agreements',
+    action() {
+      BlazeLayout.render('App_body', { main: 'agreements' });
+    },
 });
 
 FlowRouter.notFound = {

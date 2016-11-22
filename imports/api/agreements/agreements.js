@@ -8,7 +8,7 @@ Agreements.schema = new SimpleSchema({
     agreementName: {
         type: String,
         max: 200,
-        min: 5,
+        min: 1,
     },
     agreementTitle: {
         type: String,
@@ -18,9 +18,12 @@ Agreements.schema = new SimpleSchema({
     agreementCategory: {
         type: String,
         max: 200,
-        min: 5,
+        min: 1,
     },
     agreementBody: {
+        type: String
+    },
+    agreementKey: {
         type: String
     },
     signaturePad: {

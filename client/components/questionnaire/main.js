@@ -91,6 +91,12 @@ Template.questionnaire.onDestroyed(function () {
 
 
 Template.questionnaire.helpers({
+    
+    dateFormat:function(val){
+        var res = changeDateFormat(val);
+        return res;
+    },
+    
     getText: function (text, elem) {
         if (!text) {
             return;
@@ -222,7 +228,7 @@ Template.questionnaire.helpers({
                     subcat: subcategoryData
                 });
             }
-            console.log("categoryData:", categoryData);
+            //console.log("categoryData:", categoryData);
             return categoryData;
         }
     },
@@ -253,11 +259,13 @@ Template.questionnaire.helpers({
             if (error) {
                 console.log("Error calling questionnaireListing()");
             }
+            //console.log(response,'response');
             Session.set("questionnaireListing", response);
             Session.set("questionnaireLoaded", true);
         });
         return Session.get("questionnaireListing");
     },
+    
     questionSession: function () {
         if (Session.get("questionSession")) {
             return true;

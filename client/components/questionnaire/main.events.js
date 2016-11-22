@@ -296,30 +296,39 @@ Template.questionnaire.events({
 		});
 		$('#questionnairePopup').modal('open');
 	},
+	
+	//---------Create questionnaire-----rpm-------//
 	'submit #questionnaireAdd': function (event, data) {
 		event.preventDefault();
-
+		var questionnaireTitle = $('#title').val();
+        var questionnaireKey = questionnaireTitle.toLowerCase().split(" ").join("_");
 		let questionnaireData = {
 			title: data.find("#title").value,
 			strap: data.find("#strap").value,
+			questionnaireKey:questionnaireKey,
 			summary: data.find("#questionnaireSummary").value,
-			helper: "",
+			status: true,
 			createdBy: Meteor.userId()
 		};
-
-		Meteor.call("insertQuestionnaire", questionnaireData, function (error, questionnaireId) {
-			if (questionnaireId) {
-				//Session.set('questionnaireSuccessMsg', 'Questionnaire added successfully!');
-				Session.set("questionnaireListing", undefined);
-				Session.set("questionnaireLoaded", false);
-
-				if (Session.get("imgArr")) {
-					Session.set('imgArr', undefined);
+		Meteor.call("insertQuestionnaire", questionnaireData, function (error, res) {
+			if (error) {
+				sAlert.error(error.reason, {effect: 'bouncyflip', position: 'top-right', timeout: 5000, onRouteClose: true, stack: false, offset: '80px'});
+			}else{
+				if (res.status) {
+					Session.set("questionnaireListing", undefined);
+					Session.set("questionnaireLoaded", false);
+					//if (Session.get("imgArr")) {
+					//	Session.set('imgArr', undefined);
+					//}
+					sAlert.success(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+					$('#questionnairePopup').modal("close");
+				}else{
+					sAlert.error(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
 				}
-				$('#questionnairePopup').modal("close");
 			}
 		});
 	},
+	
 	'change #image_name': function (event, template) {
 
 		FS.Utility.eachFile(event, function (file) {
@@ -530,6 +539,8 @@ Template.questionnaire.events({
 
 		Session.set("questionnaireItem", completeArr);
 	},
+	
+	//------update questionnaire---------rpm---//
 	'submit #questionnaireUpdate': function (event, data) {
 		event.preventDefault();
 		var questionnaireSession = Session.get("questionnaireItem");
@@ -580,20 +591,24 @@ Template.questionnaire.events({
 				questions: allQuestionArray,
 				createdBy: Meteor.userId()
 			};
-			Meteor.call("insertQuestionnaire", questionnaireData, questionnaireSession[0].questionnaire._id, function (error, questionnaireId) {
-				if (questionnaireId) {
+			Meteor.call("insertQuestionnaire", questionnaireData, questionnaireSession[0].questionnaire._id, function (error, res) {
+				if (res) {
 					//Session.set('questionnaireSuccessMsg', 'Questionnaire added successfully!');
-
-					Session.set("imgArr", "");
-					Session.set("questionnaireItem", "");
-					Session.set('allQuestion', '');
-					$('#questionnairePopup').modal("close");
+					if (res.status) {
+						Session.set("imgArr", "");
+						Session.set("questionnaireItem", "");
+						Session.set('allQuestion', '');
+						sAlert.success(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+						$('#questionnairePopup').modal("close");
+					}else{
+						sAlert.error(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+					}
 				}
-
 			});
 		}
 
 	},
+	
 	'click #questionnaireClose': function () {
 		Session.set("questionnaireItem", "");
 		Session.set("allQuestion", "");
@@ -740,22 +755,54 @@ Template.questionnaire.events({
 			}
 		}
 	},
+	
+	//----------delete questionnaire--rpm---------//
 	'click .deleteQuestionnaire': function (event, data) {
 		if (confirm("Are you sure you want to delete?")) {
 			var id = $(event.currentTarget).attr("id");
 			catId = id.split('_');
 			catData = { deleted: '1' };
-
-			Meteor.call("insertQuestionnaire", catData, catId[1], function (error, catId) {
-				if (catId) {
-					Session.set("questionnaireListing", undefined);
-					Session.set("questionnaireLoaded", false);
-					//Router.go('/questionnaire');
+			Meteor.call("insertQuestionnaire", catData, catId[1], function (error, res) {
+				if (res) {
+					if (res.status) {
+						Session.set("questionnaireListing", undefined);
+						Session.set("questionnaireLoaded", false);
+						sAlert.success('Questionnaire deleted successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+					}else{
+						sAlert.error('Questionnaire not deleted successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+					}
 				}
 			});
 		}
-
 	},
+	
+	//----------change status questionnaire--rpm---------//
+	'click .statusQuestionnaire': function (event, data) {
+		var id = $(event.currentTarget).attr("id");
+		var status = $(event.currentTarget).attr("data-status");
+		catId = id.split('_');
+		if (status) {
+			catData = { status: false };
+		}else{
+			catData = { status: true };
+		}
+		
+		console.log(catData, catId[1],'catData, catId[1]');
+		Meteor.call("insertQuestionnaire", catData, catId[1], function (error, res) {
+			if (res) {
+				if (res.status) {
+					Session.set("questionnaireListing", undefined);
+					Session.set("questionnaireLoaded", false);
+					sAlert.success('Questionnaire status change successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+				}else{
+					sAlert.error('Questionnaire not deleted successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+				}
+			}
+		});
+		
+	},
+	
+	
 	'click .printQuestionnaire': function (event, data) {
 		event.preventDefault();
 

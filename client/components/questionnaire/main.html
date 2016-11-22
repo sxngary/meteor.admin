@@ -1,5 +1,5 @@
 <template name="questionnaire">
-    <div class="col l10 offset-l2 m12 s12">
+    <div class="col s12">
         <div class="content-right">
             <h1 class="section-title">Questionnaire Management</h1>
             <div class="row">
@@ -11,26 +11,38 @@
                     </ul>
                     <div class="col s12" id="questionnaireTab">
                         {{#if activeTab "questionnaires"}}
+                        <div class="row right">
+                            <div class="col s12">
+                                <button id="createQuestionnaire" class="btn waves-effect waves-light">Add</button>
+                            </div>
+                        </div>
                         <div class="row questionnaire-block-rw">
                             {{#if questionnaireListing}}
                             <table class="bordered striped highlight centered responsive-table">
                             <thead>
                                 <tr>
                                     <th>Title</th>
+                                    <th>Type</th>
                                     <th>Created Date</th>
-                                    <th>Modified Date</th>
-                                    <th>&nbsp;</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {{#each questionnaireListing}}
                             <tr style="">
-                                <td><a href="javascript:void(0);" id="{{questionnaireId}}" class="modal-trigger questionnaire">{{title}}</a></td>
-                                <td>{{createdAt}}</td>
-                                <td>{{modifiedAt}}</td>
+                                <td><a href="javascript:void(0);" id="{{_id}}" class="modal-trigger questionnaire">{{title}}</a></td>
+                                <td>{{strap}}</td>
+                                <td>{{dateFormat created}}</td>
                                 <td>
-                                    <a href="#" class="icondelete deleteQuestionnaire tooltip" id="del_{{questionnaireId}}"><i class="fa fa-trash-o fa-lg"></i><span class="tooltiptext">Delete</span></a>
-                                    <!--<a href="#" class="iconprint printQuestionnaire tooltip" id="print_{{questionnaireId}}"><i class="fa fa-print fa-lg"></i><span class="tooltiptext">Print</span></a>-->
+                                    <a href="#" class="icondelete deleteQuestionnaire tooltip" id="del_{{_id}}"><i class="small material-icons">delete</i><span class="tooltiptext">Delete</span></a>
+                                    
+                                    <a href="#" class="iconprint statusQuestionnaire tooltip" id="status_{{_id}}" data-status="{{status}}">
+                                    {{#if status}}    
+                                        <i class="small material-icons">done</i>
+                                    {{else}}
+                                        <i class="small material-icons">not_interested</i>
+                                    {{/if}}
+                                        <span class="tooltiptext">Status</span></a>
                                 </td>
                             </tr>
                             {{/each}}
@@ -45,12 +57,6 @@
                                 </li>
                             </ul>
                             {{/if}}
-                        </div>
-
-                        <div class="row">
-                            <div class="col s12">
-                                <button id="createQuestionnaire" class="btn waves-effect waves-light">Add</button>
-                            </div>
                         </div>
                         {{/if}}
                     </div>
@@ -219,7 +225,7 @@
                                 <div class="input-field col s12">
                                     <div class="rowminus">
                                         <div class="col m8 s12">
-                                            <input type="text" id="title" name="title" value="{{getText questionnaireData.questionnaireTitle}}" required>
+                                            <input type="text" id="title" name="title" value="{{getText questionnaireData.questionnaireTitle}}" required data-parsley-pattern="/^[A-Za-z0-9\s]+$/">
                                             <label class="{{#if questionnaireData}}active{{/if}}" for="title">Title</label>
                                         </div>
                                     </div>
@@ -227,8 +233,8 @@
                                 <div class="input-field col s12">
                                     <div class="rowminus">
                                         <div class="col m8 s12">
-                                            <input type="text" id="strap" name="strap" value="{{getText questionnaireData.strap}}">
-                                            <label class="{{#if questionnaireData}}active{{/if}}" for="strap">Strap</label>
+                                            <input type="text" id="strap" name="strap" value="{{getText questionnaireData.strap}}" required>
+                                            <label class="{{#if questionnaireData}}active{{/if}}" for="strap">Type</label>
                                         </div>
                                     </div>
                                 </div>
@@ -375,7 +381,7 @@
                 <div class="col s12">
                     <ul class="tabs">
                         <li class="tab col s3" id=""><a href="#categoryTab1">Main</a></li>
-                        <li class="tab col s3" id=""><a href="#categoryTab2">Helper</a></li>
+                        <!--<li class="tab col s3" id=""><a href="#categoryTab2">Helper</a></li>-->
                     </ul>
                     
                     <div class="col s12" id="categoryTab1">
@@ -411,22 +417,6 @@
                             </div>
                         </div>
                         <div class="input-field col s12">
-                            <label for="title" class="active">Summary</label>
-                        </div>
-                        <div class="input-field col s12">
-                            <div class="rowminus">
-                                <div class="col s8">
-                                    <textarea id="summary" name="summary" class="materialize-textarea">{{getText questionnaireCatValue.catSummary}}</textarea>
-                                </div>
-                                <div class="col s4">
-                                    <a class="tooltip" data-position="bottom" data-delay="50" data-tooltip="">
-                                        <i class="mdi-action-info-outline"></i>
-                                        <span class="tooltiptext">Summary information displayed by from help button.</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-field col s12">
                             <div class="rowminus">
                                 <div class="col m8 s8">
                                     <span class="color-left">Colour</span>
@@ -457,9 +447,25 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="input-field col s12">
+                            <label for="title" class="active">Summary</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <div class="rowminus">
+                                <div class="col s8">
+                                    <textarea id="summary" name="summary" class="materialize-textarea">{{getText questionnaireCatValue.catSummary}}</textarea>
+                                </div>
+                                <div class="col s4">
+                                    <a class="tooltip" data-position="bottom" data-delay="50" data-tooltip="">
+                                        <i class="mdi-action-info-outline"></i>
+                                        <span class="tooltiptext">Summary information displayed by from help button.</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    {{#if sessionCheck}}
+                    <!--{{#if sessionCheck}}
                     <div class="col s12" id="categoryTab2">
                         <div class="input-field col s12">
                             <div class="rowminus">
@@ -477,7 +483,7 @@
                             </div>
                         </div>
                     </div>
-                    {{/if}}
+                    {{/if}}-->
                 </div>
                 </div>
             </div>
