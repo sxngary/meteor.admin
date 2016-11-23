@@ -5,9 +5,10 @@ Template.questionForm.events({
         $("#questionPopup").modal({
             ready: function() {
                 //$('textarea#questionHelper').froalaEditor();
-            }
+            },
+	    dismissible: false
         });
-        $('#questionPopup').modal("open", { dismissible: false });
+        $('#questionPopup').modal("open", {  });
     },
     'click #questionClose': function (event, data) {
 		/*Session.set('questionSession','');

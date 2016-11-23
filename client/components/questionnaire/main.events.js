@@ -290,7 +290,7 @@ Template.questionnaire.events({
 		$('.collapsible').collapsible();
 		$('#questionnairePopup').modal({
 			ready: function() {
-    			$('textarea#questionnairehelper').froalaEditor();
+    			//$('textarea#questionnairehelper').froalaEditor();
 				$('ul.tabs').tabs();
 			}
 		});
@@ -317,11 +317,38 @@ Template.questionnaire.events({
 				if (res.status) {
 					Session.set("questionnaireListing", undefined);
 					Session.set("questionnaireLoaded", false);
-					//if (Session.get("imgArr")) {
-					//	Session.set('imgArr', undefined);
-					//}
+
 					sAlert.success(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
-					$('#questionnairePopup').modal("close");
+					//$('#questionnairePopup').modal("close");
+					if (Session.get('allQuestion')) {
+						Session.set('allQuestion', '');
+					}
+					var qId = res.id;
+					Session.set('questionnaireId', qId);
+					Meteor.call("questionnaireQuestionArray", qId, function (error, data) {
+						//console.log("questionnaireQuestionArray Dinesh",qId)
+						Session.set('allQuestion', data);
+						Meteor.setTimeout(function () {
+							$('.collapsible').collapsible();
+						}, 1000);
+					});
+					Meteor.subscribe("questionnaireItem", qId);
+					var questionnaireData = Questionnaires.find({ _id: qId }).fetch();
+					var completeArr = [];
+					if (questionnaireData.length > 0) {
+						completeArr.push({
+							questionnaire: questionnaireData[0],
+							questionnaireTitle: questionnaireData[0].title,
+							strap: questionnaireData[0].strap,
+							summary: questionnaireData[0].summary,
+							helper: questionnaireData[0].helper
+						});
+					}
+					Session.set("questionnaireItem", completeArr);
+					
+					$('textarea#questionnaireSummary').froalaEditor();
+					$('ul.tabs').tabs();
+					$('ul.tabs').tabs('select_tab', "questions");
 				}else{
 					sAlert.error(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
 				}
@@ -525,13 +552,13 @@ Template.questionnaire.events({
 		$('#questionnairePopup').modal({
 			ready: function () {
 				$('#questionnaireUpdate').parsley().reset();
-				$('textarea#questionnairehelper').froalaEditor();
+				//$('textarea#questionnairehelper').froalaEditor();
 				$('textarea#questionnaireSummary').froalaEditor();
 				
 				$('.loader-bg').hide();
-				if (typeof questionnaireData[0].helper !== "undefined" && questionnaireData[0].helper.length > 0) {
-					$('#questionnairehelper').froalaEditor('html.set', questionnaireData[0].helper);
-				}
+				//if (typeof questionnaireData[0].helper !== "undefined" && questionnaireData[0].helper.length > 0) {
+				//	$('#questionnairehelper').froalaEditor('html.set', questionnaireData[0].helper);
+				//}
 				if (typeof questionnaireData[0].summary !== "undefined" && questionnaireData[0].summary.length > 0) {
 					$('#questionnaireSummary').froalaEditor('html.set', questionnaireData[0].summary);
 				}
@@ -591,7 +618,7 @@ Template.questionnaire.events({
 				title: data.find("#title").value,
 				strap: data.find("#strap").value,
 				summary: data.find("#questionnaireSummary").value,
-				helper: data.find("#questionnairehelper").value,
+				helper: '',//data.find("#questionnairehelper").value,
 				questions: allQuestionArray,
 				createdBy: Meteor.userId()
 			};
@@ -604,6 +631,8 @@ Template.questionnaire.events({
 						Session.set('allQuestion', '');
 						sAlert.success(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
 						$('#questionnairePopup').modal("close");
+						Session.set("questionnaireListing", undefined);
+						Session.set("questionnaireLoaded", false);
 					}else{
 						sAlert.error(res.msg, {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
 					}

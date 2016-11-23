@@ -111,12 +111,13 @@ Template.questionForm.onRendered(function () {
             $("#questionPopup").modal({
                 ready: function() {
                     //$('textarea#questionHelper').froalaEditor();
-                }
+                },
+                dismissible: false
             });
-            $('#questionPopup').modal("open", { dismissible: false });
+            $('#questionPopup').modal("open", {  });
             if (Session.get("viaNewQues")) {
                 Meteor.setTimeout(function() {
-                    $('ul.tabs').tabs({select_tab: "secondQuestionTab"});
+                    $('ul.tabs').tabs('select_tab', "secondQuestionTab");
                     Session.set("viaNewQues", undefined);
                 }, 400);
             }

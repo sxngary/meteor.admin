@@ -127,9 +127,9 @@ Template.questionnaire.helpers({
             case "summary":
                 $('#questionnaireSummary').froalaEditor('html.set', ret);
                 break;
-            case "helper":
-                $('#questionnairehelper').froalaEditor('html.set', ret);
-                break;
+            //case "helper":
+            //    $('#questionnairehelper').froalaEditor('html.set', ret);
+            //    break;
             case "catHelper":
                 $('textarea#helper').froalaEditor('html.set', ret);
                 break;

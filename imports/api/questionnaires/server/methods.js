@@ -53,6 +53,7 @@ Meteor.methods({
                     if (id) {
                         result['status'] = true;
                         result['msg'] = 'Questionnaire added successfully!';
+                        result['id'] = id;
                     }else{
                         result['status'] = false;
                         result['msg'] = "Questionnaire not added successfully!";
