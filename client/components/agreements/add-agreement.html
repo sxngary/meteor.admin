@@ -1,14 +1,14 @@
 <template name="addAgreement">
-    <div class="">
-        <div class="modal-header light-blue lighten-1">
-            <h5>Create Agreements Template</h5>
+    <div class=" model-cover">
+        <div class="modal-header">
+            <h5 class="main-heading">Create Agreements Template</h5>
         </div>
         <form id="frmAgreement" name="frmAgreement" data-parsley-validate>
             <div class="modal-content">
                 <div class="row">
                     <div class="col m12">
                         <div class="row">
-                            <div class="col s1 stepno">1</div>
+                            
                             <div class="input-field col m8 mt40">
                                 <input type="text" name="agreement_name" id="agreement_name" value="{{agreementData.agreementName}}" required data-parsley-pattern="/^[A-Za-z0-9\s]+$/">
                                 <label for="agreement_name" class="{{#if agreementData}} active {{/if}}">Agreement name</label>
@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col m12">
                         <div class="row">
-                            <div class="col s1 stepno">2</div>
+                            
                             <div class="input-field col m8 mt40">
                                 <input type="text" name="agreement_title" id="agreement_title" value="{{agreementData.agreementTitle}}" required data-parsley-pattern="/^[A-Za-z0-9\s]+$/">
                                 <label for="agreement_title" class="{{#if agreementData}} active {{/if}}">Agreement Title</label>
@@ -30,7 +30,7 @@
                 <div class="row">
                     <div class="col m12">
                         <div class="row">
-                            <div class="col s1 stepno">3</div>
+                            
                             <div class="input-field col m8 mt40">
                                 <input type="text" name="agreement_category" id="agreement_category" value="{{agreementData.agreementCategory}}" data-parsley-pattern="/^[A-Za-z0-9\s]+$/">
                                 <label for="agreement_category" class="{{#if agreementData}} active {{/if}}">Agreement Category</label>
@@ -41,9 +41,9 @@
                 <div class="row">
                     <div class="col m12">
                         <div class="row">
-                            <div class="col s1 stepno">4</div>
+                            
                             <div class="switch">
-                                <div class="col m1"><label>Signature Pad</label></div>
+                                <div class="sig-pad"><label>Signature Pad</label></div>
                                 <label>
                                   Off
                                   <input type="checkbox" id="signature_pad" checked="{{#if agreementData.signaturePad}} checked {{/if}}">
@@ -57,7 +57,7 @@
                 <div class="row">
                     <div class="col m12">
                         <div class="row">
-                            <div class="col s1 stepno">5</div>
+                            
                             <div class="input-field col m8 mt40">
                                 <label for="body" class="mb20 setted">Agreement Body</label>
                                 <textarea id="agreement_body" name="agreement_body" class="text-small" required></textarea>
@@ -67,11 +67,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn waves-effect waves-light" type="submit" name="action">
+                <button class="btn waves-effect waves-light blue" type="submit" name="action">
                 {{#if agreementData}} Update {{else}} Save {{/if}} & Exit
                 <i class="mdi-content-send right"></i>
                 </button>
-                <div id="closeTempModal" class="modal-action waves-effect waves-green btn-flat btn-default">
+                <div id="closeTempModal" class="btn waves-effect waves-light grey mar-rt10">
                     Cancel
                 </div>
             </div>

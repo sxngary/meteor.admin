@@ -1,24 +1,24 @@
 <template name="questionnaire">
     <div class="col s12">
-        <div class="content-right">
-            <h1 class="section-title">Questionnaire Management</h1>
+         <div class="main-bgw">
+            <h1 class="main-heading">Questionnaire Management</h1>
             <div class="row">
-                <div class="col s12">
+                <div class="col s12 tab-cover">
                     <ul class="tabs">
                         <li class="tab col s3" id=""><a href="#questionnaireTab">Questionnaire</a></li>
                         <li class="tab col s3" id=""><a href="#qCategoryTab">Categories</a></li>
                         <li class="tab col s3" id=""><a href="#qQuestionTab">Questions</a></li>
                     </ul>
-                    <div class="col s12" id="questionnaireTab">
+                    <div class="col s12 tab-content" id="questionnaireTab">
                         {{#if activeTab "questionnaires"}}
                         <div class="row right">
                             <div class="col s12">
-                                <button id="createQuestionnaire" class="btn waves-effect waves-light">Add</button>
+                                <button id="createQuestionnaire" class="btn waves-effect waves-light blue">Add</button>
                             </div>
                         </div>
-                        <div class="row questionnaire-block-rw">
+                        <div class="row questionnaire-block-rw addnew-table tab-table">
                             {{#if questionnaireListing}}
-                            <table class="bordered striped highlight centered responsive-table">
+                            <table class="bordered responsive-table">
                             <thead>
                                 <tr>
                                     <th>Title</th>
@@ -60,11 +60,17 @@
                         </div>
                         {{/if}}
                     </div>
-                    <div class="col s12" id="qCategoryTab">
+                    <div class="col s12 tab-content" id="qCategoryTab">
                         {{#if activeTab "categories"}}
+                        <div class="row right">
+                        <div class="col s12">
+                            <button id="createQuestionnaireCat" class="btn waves-effect waves-light blue">Add
+                            </button>
+                        </div>
+                        </div>
                         <div class="row">
                         {{#if displayCategory}} 
-                        <table class="bordered striped highlight centered responsive-table">
+                        <table class="bordered  responsive-table">
                             <thead>
                                 <tr>
                                     <th>Parent</th>
@@ -118,15 +124,10 @@
                         {{/if}} 
                         </div>
                         
-                        <div class="row">
-                        <div class="col s12">
-                            <button id="createQuestionnaireCat" class="btn waves-effect waves-light">Add
-                            </button>
-                        </div>
-                        </div>
+                        
                         {{/if}}
                     </div>
-                    <div class="col s12" id="qQuestionTab">
+                    <div class="col s12 tab-content" id="qQuestionTab">
                         {{#if activeTab "questions"}}
                         <!-- <div class="col m6 s8 right sortby">
                             <select class="right">
@@ -137,6 +138,11 @@
                             </div> -->
                         <div class="clearfix mb20"></div>
                         {{#if allCategory}}
+                        <div class="row right">
+                        <div class="col s12">
+                            <button id="createQuestion" class="btn waves-effect waves-light blue">Add</button>
+                        </div>
+                        </div>
                         <div class="row questions-accordion">
                             <div class="col l12">
                                 <ul class="collapsible" data-collapsible="accordion">
@@ -189,11 +195,7 @@
                         </div>
                         {{/if}}
 
-                        <div class="row">
-                        <div class="col s12">
-                            <button id="createQuestion" class="btn waves-effect waves-light">Add</button>
-                        </div>
-                        </div>
+                        
                         
                         {{/if}}
                     </div>

@@ -1,47 +1,37 @@
 <template name="dashboard_body">
     <div class="row">
         <div class="col s12">
-            <div class="text-center">
-            <h1>WelCome to Regulated Pharma Manager</h1>
-            </div>
+            <div class="main-bgw">
+           
+            <h1 class="main-heading">WelCome to Regulated Pharma Manager</h1>
+         
             
             {{#if currentUser}}
-            <br/><br/>
-            <div class="section">
-            <h5>Providers</h5>
+        
+            <fieldset class="provdr">
+           <lagend> Providers</lagend>
+           
+             <p>Total Provider: <strong>56</strong></p>
+              <p>Active Provider: <strong>50</strong></p>
+              <p>Inactive Provider: <strong>6</strong></p>
+            </fieldset>
             
-                <div class="section">
-                    <p>Total Provider: <strong>56</strong></p>
-                </div>
-                <div class="divider"></div>
-                <div class="section">
-                    <p>Active Provider: <strong>50</strong></p>
-                </div>
-                <div class="divider"></div>
-                <div class="section">
-                    <p>Inactive Provider: <strong>6</strong></p>
-                </div>
-                <div class="divider"></div>
-            </div>
-            
-            <div class="section">
-            <h5>Patients</h5>
-                <div class="section">
+            <fieldset class="provdr">
+           <lagend> Patients</lagend>
+               
                     <p>Total Patient: <strong>56</strong></p>
-                </div>
-                <div class="divider"></div>
-                <div class="section">
+               
+               
                     <p>Active Patient: <strong>50</strong></p>
-                </div>
-                <div class="divider"></div>
-                <div class="section">
+            
+                  
                     <p>Inactive Patient: <strong>6</strong></p>
-                </div>
-                <div class="divider"></div>
-            </div>
+              
+            
+            </fieldset>
             {{else}}
                 Home page......
             {{/if}}
-        </div>
+        </div></div>
     </div>
 </template>
