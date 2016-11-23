@@ -8,12 +8,12 @@ Template.questionForm.onCreated(function () {
     Meteor.subscribe('allCategory');
 
     var qId = FlowRouter.getParam("id");
-    console.log("qId:", qId);
+    //console.log("qId:", qId);
     Session.set('questionIsLoaded', undefined);
     Session.set('formSubmitted', undefined);
 
     Meteor.call("questionData", qId, function (error, questionData) {
-        console.log("questionData:", questionData);
+        //console.log("questionData:", questionData);
         if (questionData.questionSession != undefined) {
             Session.set("questionSession", questionData.questionSession);
             Session.set("responseRR", questionData.questionSession.riskRatio);
@@ -105,11 +105,12 @@ Template.questionForm.onRendered(function () {
 
     Tracker.autorun(function () {
         var questionIsLoaded = Session.get('questionIsLoaded');
-
+        //console.log(questionIsLoaded,'questionIsLoaded');
         if (questionIsLoaded) {
+            //-------initialize modal---------//
             $("#questionPopup").modal({
                 ready: function() {
-                    $('textarea#questionHelper').froalaEditor();
+                    //$('textarea#questionHelper').froalaEditor();
                 }
             });
             $('#questionPopup').modal("open", { dismissible: false });
@@ -360,9 +361,9 @@ var questionFormHelpers = {
 
         }
         switch (elem) {
-            case "quesHelper":
-                $('#questionHelper').froalaEditor('html.set', ret);
-                break;
+            //case "quesHelper":
+            //    $('#questionHelper').froalaEditor('html.set', ret);
+            //    break;
             case "rrResponse":
                 Meteor.setTimeout(function () {
                     $('#rrResponse_' + rrIndex).material_select();

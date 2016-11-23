@@ -283,9 +283,9 @@ Template.questionnaire.helpers({
             var questionDef = Contents.find({
                 _id: questionSess.question
             }).fetch();
-            var questionHelper = Contents.find({
-                _id: questionSess.helper
-            }).fetch();
+            //var questionHelper = Contents.find({
+            //    _id: questionSess.helper
+            //}).fetch();
             Meteor.subscribe('categoryData', questionSess.category);
             var categoryContId = Categories.find({
                 _id: questionSess.category,
@@ -302,7 +302,7 @@ Template.questionnaire.helpers({
                     questionDef: questionDef[0].en,
                     questionCat: questionCat[0].en,
                     type: questionSess.question_type,
-                    helper: questionHelper[0].en
+                    helper: '',//questionHelper[0].en
                 });
             }
             return Session.get("questionValue");

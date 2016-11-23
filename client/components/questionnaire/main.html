@@ -514,7 +514,7 @@
                                             <div class="input-field col s12">
                                                 <div class="rowminus">
                                                     <div class="col m8 s12">
-                                                        <select name="questionCategory" id="questionCategory" required>
+                                                        <select class="browser-default" name="questionCategory" id="questionCategory" required>
                                                             <option value="" selected>Select Category</option>
                                                             {{#each displayCategory}}
                                                             <option {{isSelect catId questionUpdation.category}} value="{{catId}}">{{title}}</option>
@@ -531,7 +531,7 @@
                                             <div class="input-field col s12">
                                                 <div class="rowminus">
                                                     <div class="col m12 s12">
-                                                        <select name="dependency" id="dependency" required>
+                                                        <select class="browser-default" name="dependency" id="dependency" required>
                                                             <option value="null" selected>Primary Question</option>
                                                             {{#if questionSet}}
                                                             {{#each questionSet}}
@@ -582,7 +582,7 @@
                                             <div class="input-field col s12">
                                                 <div class="rowminus">
                                                     <div class="col m12 s12">
-                                                        <select disabled="{{#unless canEditQuesType}}disabled{{/unless}}" id="element_type" name="element_type">
+                                                        <select class="browser-default" disabled="{{#unless canEditQuesType}}disabled{{/unless}}" id="element_type" name="element_type">
                                                         {{#if editQuesType}}
                                                         {{#each editQuesType}}
                                                         <option {{isSelect value questionUpdation.questionType}} value="{{value}}" >{{title}}</option>
@@ -605,7 +605,7 @@
                                             <div class="input-field col s12">
                                                 <div class="rowminus">
                                                     <div class="col m12 s12">
-                                                        <select id="gender" name="gender">
+                                                        <select class="browser-default" id="gender" name="gender">
                                                         <option {{isSelect 0 questionUpdation.gender}} value="0">Male & Female</option>
                                                         <option {{isSelect 2 questionUpdation.gender}} value="2">Male</option>
                                                         <option {{isSelect 1 questionUpdation.gender}} value="1">Female</option>
@@ -623,7 +623,7 @@
                                                         <input type="text" name="key_string" id="key_string" value="{{questionUpdation.key_string}}" required data-parsley-validation-minlength="1"
                                                             data-parsley-trigger="keyup" data-parsley-keystring="true" data-parsley-keystring_uniq="true"
                                                         />
-                                                        <label class="{{#if questionUpdation}}active{{/if}}" for="title">Question Variable Name</label>
+                                                        <label class="{{#if questionUpdation}}active{{/if}}" for="title">Question keystring Name</label>
                                                     </div>
                                                     <div class="col m4 s12 s-mb20-mob">
                                                     </div>

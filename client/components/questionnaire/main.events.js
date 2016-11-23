@@ -130,7 +130,7 @@ Template.questionnaire.events({
 			let catData = {
 				cat_name: data.find("#cat_name").value,
 				summary: data.find("#summary").value,
-				helper: data.find("#helper").value,
+				helper: '',//data.find("#helper").value,
 				cat_color: data.find("#cat_color").value,
 				question_color: data.find("#question_color").value,
 				parent: data.find('#parent').value,
@@ -201,12 +201,12 @@ Template.questionnaire.events({
 					//$('#question_color.minicolors').minicolors('value', data.question_color);
 					$('#categoriesPopup').modal({
 						ready: function() {
-							$('textarea#helper').froalaEditor();
+							//$('textarea#helper').froalaEditor();
 							$('textarea#summary').froalaEditor();
 							
-							if (typeof data.helper !== "undefined" && data.helper.length > 0) {
-								$('textarea#helper').froalaEditor('html.set', data.helper);
-							}
+							//if (typeof data.helper !== "undefined" && data.helper.length > 0) {
+							//	$('textarea#helper').froalaEditor('html.set', data.helper);
+							//}
 							if (typeof data.summary !== "undefined" && data.summary.length > 0) {
 								$('textarea#summary').froalaEditor('html.set', data.summary);
 							}
@@ -347,6 +347,8 @@ Template.questionnaire.events({
 		});
 
 	},
+	
+	//-------open question popup---------rpm----//
 	'click #createQuestion': function () {
 		$('#questionAdd').parsley().reset();
 		Session.set('questionSession', '');
@@ -355,12 +357,14 @@ Template.questionnaire.events({
 		Session.set("answerData", "");
 		Session.set("questionSet", '');
 
-		$('textarea#questionHelper').froalaEditor();
-		$('#questionPopup').modal("open");
+		//$('textarea#questionHelper').froalaEditor();
 		$('#questionAdd')[0].reset();
+		$('#questionPopup').modal("open");
 		/* $('#secondQuestionTab').hide();
 		 $('#secondTabCont').hide();	*/
 	},
+	
+	//--------Add questions-----rpm-------//
 	'submit #questionAdd': function (event, data) {
 		event.preventDefault();
 
@@ -404,7 +408,7 @@ Template.questionnaire.events({
 			Meteor.call("insertQuestion", queData, queId[1], function (error, res) {
 				if (res) {
 					Meteor.call("removeFromQuestionnaire", queId[1], function (error, result) {
-						console.log("result::", result)
+						//console.log("result::", result)
 					});
 					Router.go('/questionnaire');
 				}
@@ -468,7 +472,7 @@ Template.questionnaire.events({
 		Meteor.call("fetchQuestions", id, function (error, questionData) {
 			if (questionData) {
 				Session.set("questionSets", questionData);
-				console.log("questionData", questionData)
+				//console.log("questionData", questionData)
 			} else {
 				Session.set("questionSets", undefined);
 			}
@@ -644,8 +648,8 @@ Template.questionnaire.events({
 					if (allQuestion.length > 0) {
 						var filterQs = _.findWhere(allQuestion, { mainCatId: clickQuestion[0].category });
 						var filterIndex = _.findWhere(allQuestion, { index: index });
-						console.log("filterQs::", filterQs);
-						console.log("filterIndex::", filterIndex);
+						//console.log("filterQs::", filterQs);
+						//console.log("filterIndex::", filterIndex);
 						var selectedindex = -1;
 						_.each(allQuestion, function (data, idx) {
 							if (data.mainCatId == clickQuestion[0].category) {
@@ -714,7 +718,7 @@ Template.questionnaire.events({
 											if (!filterQuestionData) {
 												subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
 												var fullArr = alreadySelectedQs.concat(questionData);
-												console.log("fullArr::", fullArr)
+												//console.log("fullArr::", fullArr)
 												allQuestion[selectedindex]['subCategory'][newIndex]['SubcatQuestions'] = fullArr;
 											} else {
 												//allQuestion[selectedindex]['subCategory'][newIndex]['SubcatQuestions'] = questionData;
@@ -787,7 +791,7 @@ Template.questionnaire.events({
 			catData = { status: true };
 		}
 		
-		console.log(catData, catId[1],'catData, catId[1]');
+		//console.log(catData, catId[1],'catData, catId[1]');
 		Meteor.call("insertQuestionnaire", catData, catId[1], function (error, res) {
 			if (res) {
 				if (res.status) {

@@ -4,7 +4,7 @@ Template.questionForm.events({
     'click #openModal': function () {
         $("#questionPopup").modal({
             ready: function() {
-                $('textarea#questionHelper').froalaEditor();
+                //$('textarea#questionHelper').froalaEditor();
             }
         });
         $('#questionPopup').modal("open", { dismissible: false });
@@ -146,7 +146,7 @@ Template.questionForm.events({
         questionData = {
             _id: questionSess._id,
             question: data.find("#questionDef").value,
-            helper: data.find("#questionHelper").value,
+            helper: '',//data.find("#questionHelper").value,
             key_string: questionSess.key_string,
             category: data.find("#questionCategory").value,
             dependency: dependencyQuestion,

@@ -31,7 +31,7 @@
           <ul class="tabs">
               <li id="" class="tab col s4"><a href="#firstQuestionTab">Main</a></li>
               <li id="" class="tab col s4"><a href="#secondQuestionTab">Answers</a></li>
-              <li id="" class="tab col s4"><a href="#thirdQuestionTab">Helper</a></li>
+              <!--<li id="" class="tab col s4"><a href="#thirdQuestionTab">Helper</a></li>-->
           </ul>
           
           <div id="firstQuestionTab">
@@ -44,7 +44,7 @@
                         <div class="col m8 s12">
                             {{#if questionUpdation}}
 
-                              <select name="questionCategory" id="questionCategory" required>
+                              <select class="browser-default" name="questionCategory" id="questionCategory" required>
                                 <option value="" selected>Select Category</option>
                                   {{#each displayCategory}}
                                     <option {{isSelect catId questionUpdation.category}} value="{{catId}}">{{title}}</option>
@@ -65,7 +65,7 @@
                     <div class="input-field col s12">
                       <div class="rowminus">
                           <div class="col m12 s12">
-                              <select name="dependency" id="dependency" required>
+                              <select class="browser-default" name="dependency" id="dependency" required>
                                   <option value="null" selected>Primary Question</option>
                                   {{#if questionSet}}
                                   {{#each questionSet}}
@@ -117,7 +117,7 @@
                         <div class="rowminus"> 
                           <div class="col m12 s12">
                               
-                              <select id="element_type" name="element_type" >
+                              <select class="browser-default" id="element_type" name="element_type" >
                                 {{#if editQuesType}}
 
                                 {{#each editQuesType}}
@@ -149,7 +149,7 @@
                     <div class="input-field col s12">
                         <div class="rowminus">
                           <div class="col m12 s12">
-                              <select id="gender" name="gender">
+                              <select class="browser-default" id="gender" name="gender">
                                   <option {{isSelect 0 questionUpdation.gender}} value="0">Male & Female</option>
                                   <option {{isSelect 2 questionUpdation.gender}} value="2">Male</option>
                                   <option {{isSelect 1 questionUpdation.gender}} value="1">Female</option>
@@ -258,13 +258,12 @@
             {{/if}}
           </div>
 
-          <div id="thirdQuestionTab">
+          <!--<div id="thirdQuestionTab">
               {{#if questionSession}}
                   <div class="input-field col s12">
                       <div class="rowminus">
                       <div class="row">
                           <span class="label-left col">Helper Text</span>
-                          <!--  <span class="label-right col m10 s12">More information text displayed via "more info" button. Use to explain and clarify elements of this question. Use the edit tools to format the information, upload optimised /images etc.</span> -->
                       </div>
                       </div>
                 </div>
@@ -277,7 +276,7 @@
                       </div>
                   </div>
                   {{/if}}
-          </div>
+          </div>-->
           
         </div>
       </div>
