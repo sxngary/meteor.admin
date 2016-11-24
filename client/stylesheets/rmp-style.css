@@ -13,7 +13,7 @@ body { font-family: 'Raleway', sans-serif; font-weight: 400; background: #F0F0F0
   color: #979797;
 }
 a {
-  color:#4286f7 !important;
+  color:#4286f7;
 }
 header, main, footer { padding-left: 300px; }
 header { padding-left: 0px; }
@@ -433,6 +433,9 @@ a:focus{outline:none !important;}
 }
 .sign-page .at-signin-link p {
   text-align: center;
+}
+.sign-page .at-signin-link p a {
+  color: #4286f7;
 }
 /*sign in page*/
 @media(min-width: 1200px) and (max-width:1286px) {

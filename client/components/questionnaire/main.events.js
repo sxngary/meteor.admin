@@ -110,7 +110,9 @@ Template.questionnaire.events({
 		$('#questionnaireCatAdd')[0].reset();
 		$('#categoriesPopup').modal({
 			ready: function() {
-				$('textarea#summary').froalaEditor();
+				$('textarea#summary').froalaEditor({
+					height: 300
+				});
 				$('ul.tabs').tabs();
 			}
 		});
@@ -202,7 +204,9 @@ Template.questionnaire.events({
 					$('#categoriesPopup').modal({
 						ready: function() {
 							//$('textarea#helper').froalaEditor();
-							$('textarea#summary').froalaEditor();
+							$('textarea#summary').froalaEditor({
+								height: 300
+							});
 							
 							//if (typeof data.helper !== "undefined" && data.helper.length > 0) {
 							//	$('textarea#helper').froalaEditor('html.set', data.helper);
@@ -346,7 +350,9 @@ Template.questionnaire.events({
 					}
 					Session.set("questionnaireItem", completeArr);
 					
-					$('textarea#questionnaireSummary').froalaEditor();
+					$('textarea#questionnaireSummary').froalaEditor({
+						height: 300
+					});
 					$('ul.tabs').tabs();
 					$('ul.tabs').tabs('select_tab', "questions");
 				}else{
@@ -553,7 +559,9 @@ Template.questionnaire.events({
 			ready: function () {
 				$('#questionnaireUpdate').parsley().reset();
 				//$('textarea#questionnairehelper').froalaEditor();
-				$('textarea#questionnaireSummary').froalaEditor();
+				$('textarea#questionnaireSummary').froalaEditor({
+					height: 300
+				});
 				
 				$('.loader-bg').hide();
 				//if (typeof questionnaireData[0].helper !== "undefined" && questionnaireData[0].helper.length > 0) {
