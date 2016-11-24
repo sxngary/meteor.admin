@@ -529,8 +529,8 @@
                         </ul>
                         <div class="resp-tabs-container">
                             <div id="firstTabCont" class="active resp-tab-content resp-tab-content-active">
-                                <div class="row">
-                                    <div class="col m8 s12">
+                                <!--<div class="row">
+                                    <div class="col m8 s12">-->
                                         <div class="row">
                                             <div class="input-field col m8 mt40">
                                                 <!--<div class="rowminus">
@@ -549,6 +549,7 @@
                                                    <!-- </div>
                                                 </div>-->
                                             </div>
+                                            <div class="row">
                                             <div class="input-field col m8 mt40">
                                                 <!--<div class="rowminus">
                                                     <div class="col m12 s12">-->
@@ -568,10 +569,12 @@
                                                         </div> -->
                                                 <!--</div>-->
                                             </div>
+                                            </div>
                                             {{#if answerSet}}
-                                            <div class="input-field col s12">
-                                                <div class="rowminus">
-                                                    <div class="col m12 s12">
+                                            <div class="row">
+                                            <div class="input-field col m8 mt40">
+                                                <!--<div class="rowminus">
+                                                    <div class="col m12 s12">-->
                                                         <select id="dependencyAns" name="dependencyAns" style="font-family:Arial;height:166.8px;" multiple="" class="default-select browser-default form-control">
                                                         {{#each answerSet}}
                                                         <option {{checkedDependentAnswer ansId}} value="{{ansId}}" style="color:green;">
@@ -581,28 +584,32 @@
                                                         {{/each}}
                                                         </select>
                                                         <label>Dependency Answer</label>
-                                                    </div>
+                                                    <!--</div>-->
                                                     <!--  <div class="col m4 s12 s-mb20-mob">
                                                         <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip=" Select dependency question if only display upon an answer from a previous question e.g. Requires Yes to vigorous exercise. Otherwise leave as Primary Question "><i class="mdi-action-info-outline"></i></a>
                                                         </div> -->
-                                                </div>
+                                                <!--</div>-->
+                                            </div>
                                             </div>
                                             {{/if}}
-                                            <div class="input-field col s12">
-                                                <div class="rowminus">
-                                                    <div class="col m12 s12">
+                                            <div class="row">
+                                            <div class="input-field col m8 mt40">
+                                                <!--<div class="rowminus">
+                                                    <div class="col m12 s12">-->
                                                         <textarea id="questionDef" name="questionDef" class="materialize-textarea" required>{{questionUpdation.questionDef}}</textarea>
                                                         <label for="title" class="{{#if questionSession}}active{{/if}}">Question</label>
-                                                    </div>
+                                                    <!--</div>-->
                                                     <!--  <div class="col m4 s12 s-mb20-mob">
                                                         <a href="#"><i class="fa fa-language fa-lg"></i></a>
                                                         
                                                         </div> -->
-                                                </div>
+                                                <!--</div>-->
                                             </div>
-                                            <div class="input-field col s12">
-                                                <div class="rowminus">
-                                                    <div class="col m12 s12">
+                                            </div>
+                                            <div class="row">
+                                            <div class="input-field col m8 mt40">
+                                                <!--<div class="rowminus">
+                                                    <div class="col m12 s12">-->
                                                         <select class="browser-default" disabled="{{#unless canEditQuesType}}disabled{{/unless}}" id="element_type" name="element_type">
                                                         {{#if editQuesType}}
                                                         {{#each editQuesType}}
@@ -618,43 +625,48 @@
                                                         {{/if}}
                                                         </select>
                                                         <label class="active" for="title">Element Type</label>
-                                                    </div>
+                                                    <!--</div>
                                                     <div class="col m4 s12 s-mb20-mob">
                                                     </div>
-                                                </div>
+                                                </div>-->
                                             </div>
-                                            <div class="input-field col s12">
-                                                <div class="rowminus">
-                                                    <div class="col m12 s12">
+                                            </div>
+                                            <div class="row">
+                                            <div class="input-field col m8 mt40">
+                                                <!--<div class="rowminus">
+                                                    <div class="col m12 s12">-->
                                                         <select class="browser-default" id="gender" name="gender">
                                                         <option {{isSelect 0 questionUpdation.gender}} value="0">Male & Female</option>
                                                         <option {{isSelect 2 questionUpdation.gender}} value="2">Male</option>
                                                         <option {{isSelect 1 questionUpdation.gender}} value="1">Female</option>
                                                         </select>                                                        {{intializeselect "#gender"}}
                                                         <label class="active" for="title">Gender</label>
-                                                    </div>
+                                                    <!--</div>-->
                                                     <!-- <div class="col m4 s12 s-mb20-mob">
                                                         <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="If gender specific question select gender, else leave as Male & Female"><i class="mdi-action-info-outline"></i></a>
                                                         </div> -->
-                                                </div>
+                                                <!--</div>-->
                                             </div>
-                                            <div class="input-field col s12">
-                                                <div class="rowminus">
-                                                    <div class="col m12 s12">
+                                            </div>
+                                            <div class="row">
+                                            <div class="input-field col m8 mt40">
+                                                <!--<div class="rowminus">
+                                                    <div class="col m12 s12">-->
                                                         <input type="text" name="key_string" id="key_string" value="{{questionUpdation.key_string}}" required data-parsley-validation-minlength="1"
                                                             data-parsley-trigger="keyup" data-parsley-keystring="true" data-parsley-keystring_uniq="true"
                                                         />
                                                         <label class="{{#if questionUpdation}}active{{/if}}" for="title">Question keystring Name</label>
-                                                    </div>
+                                                    <!--</div>
                                                     <div class="col m4 s12 s-mb20-mob">
                                                     </div>
-                                                </div>
+                                                </div>-->
+                                            </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    <!--</div>-->
                                     <!-- Category Box for question Start -->
                                     <!-- Category box for question End -->
-                                </div>
+                                <!--</div>-->
                             </div>
                         </div>
                     </div>
