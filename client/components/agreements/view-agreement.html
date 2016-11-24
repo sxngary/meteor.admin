@@ -1,40 +1,40 @@
 <template name="viewAgreement">
-    <div class="modal-header light-blue lighten-1">
-        <h5>{{viewAgreementData.agreementName}}</h5>
-    </div>
-    <div class="modal-content">
-        <h4 class="section-title newsb m-b-20 orange-text center">{{viewAgreementData.agreementTitle}}</h4>
-        <hr>
-        <div class="row">
-            <div class="col l12 m12 s12">
-            {{{viewAgreementData.agreementBody}}}
-            </div>
+    <div class=" model-cover">
+        <div class="modal-header">
+            <h5 class="main-heading">{{viewAgreementData.agreementName}}</h5>
         </div>
-        <hr>
-        {{#if viewAgreementData.signaturePad}}
-        <div class="row">
-            <div class="col l6 m6 s12">
-                <div class="input-field col l6 m6 mt40">
-                    <textarea id="sign_pad" name="sign_pad" class="text-small" required></textarea>
-                    <hr>
-                    <div>(Patient Signature)</div>
+        <div class="modal-content">
+            <h4 class="section-title newsb m-b-20 center">{{viewAgreementData.agreementTitle}}</h4>
+            <hr>
+            <div class="row">
+                <div class="col l12 m12 s12">
+                {{{viewAgreementData.agreementBody}}}
                 </div>
             </div>
-            <div class="col l6 m6 s12">
-                <div class="input-field col l6 m6 mt40">
-                    <textarea id="sign_pad" name="sign_pad" class="text-small" required></textarea>
-                    <hr>
-                    <div>(Provider Signature)</div>
+            <hr>
+            {{#if viewAgreementData.signaturePad}}
+            <div class="row">
+                <div class="col l6 m6 s12">
+                    <div class="input-field col l6 m6 mt40">
+                        <textarea id="sign_pad" name="sign_pad" class="text-small" required></textarea>
+                        <hr>
+                        <div>(Patient Signature)</div>
+                    </div>
+                </div>
+                <div class="col l6 m6 s12 right">
+                    <div class="input-field col l6 m6 mt40">
+                        <textarea id="sign_pad" name="sign_pad" class="text-small" required></textarea>
+                        <hr>
+                        <div>(Provider Signature)</div>
+                    </div>
                 </div>
             </div>
+            {{/if}}
         </div>
-        {{/if}}
-    </div>
-    <div class="modal-footer">
-        <div id="closeTempModal" class="modal-action waves-effect waves-green btn-flat btn-default">
-            Close
+        <div class="modal-footer">
+            <div id="closeTempModal" class="modal-action waves-effect grey btn-flat btn-default">
+                Close
+            </div>
         </div>
     </div>
-        
-    
 </template>

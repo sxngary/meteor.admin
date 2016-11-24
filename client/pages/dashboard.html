@@ -1,37 +1,26 @@
 <template name="dashboard_body">
     <div class="row">
         <div class="col s12">
-            <div class="main-bgw">
-           
-            <h1 class="main-heading">WelCome to Regulated Pharma Manager</h1>
-         
+            <div class="main-bgw">           
+                <h1 class="main-heading">Welcome to Regulated Pharma Manager</h1>         
+                
+                <!--{{#if currentUser}}-->
             
-            {{#if currentUser}}
-        
-            <fieldset class="provdr">
-           <lagend> Providers</lagend>
-           
-             <p>Total Provider: <strong>56</strong></p>
-              <p>Active Provider: <strong>50</strong></p>
-              <p>Inactive Provider: <strong>6</strong></p>
-            </fieldset>
-            
-            <fieldset class="provdr">
-           <lagend> Patients</lagend>
+                <fieldset class="provdr">
+                    <lagend> Providers</lagend>
                
+                    <p>Total Provider: <strong>56</strong></p>
+                    <p>Active Provider: <strong>50</strong></p>
+                    <p>Inactive Provider: <strong>6</strong></p>
+                </fieldset>            
+                <fieldset class="provdr">
+                    <lagend> Patients</lagend>
                     <p>Total Patient: <strong>56</strong></p>
-               
-               
                     <p>Active Patient: <strong>50</strong></p>
-            
-                  
                     <p>Inactive Patient: <strong>6</strong></p>
-              
-            
-            </fieldset>
-            {{else}}
-                Home page......
-            {{/if}}
-        </div></div>
+                </fieldset>
+                <!-- {{/if}}-->
+            </div>
+        </div>
     </div>
 </template>

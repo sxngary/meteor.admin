@@ -9,14 +9,16 @@ import "/lib/agreementlist.js";
 import "/lib/commonfunction.js";
 
 FlowRouter.route('/', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'dashboard',
     title: 'Dashboard',
     action() {
-      BlazeLayout.render('App_body', { main: 'dashboard_body' });
+        BlazeLayout.render('App_body', { main: 'dashboard_body' });
     },
 });
 
 FlowRouter.route('/agreements', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'agreements',
     parent: 'dashboard',
     title: 'Agreements',

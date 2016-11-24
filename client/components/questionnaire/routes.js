@@ -1,6 +1,7 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 FlowRouter.route('/questionnaire', {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: 'questionnaire',
     parent: 'dashboard',
     title: 'Questionnaire',
@@ -10,6 +11,7 @@ FlowRouter.route('/questionnaire', {
 });
 
 FlowRouter.route("/question/:id", {
+    triggersEnter: [AccountsTemplates.ensureSignedIn],
     name: "question.edit",
     title: 'Question',
     action(params, queryParams) {
