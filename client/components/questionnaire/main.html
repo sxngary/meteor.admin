@@ -73,21 +73,17 @@
                         <table class="bordered  responsive-table">
                             <thead>
                                 <tr>
-                                    <th>Parent</th>
                                     <th>Category</th>
+                                    <th>Parent</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
                             {{#each displayCategory}}
                             <tr style="">
+                                <td><a href="javascript:void(0);" class="editCategory" id="{{catId}}">{{title}}</a></td>
                                 <td>-</td>
-                                <td><a href="javascript:void(0);" class="editCategory" id="{{catId}}">
-                                    {{title}}
-                                </a></td>
-
-                                <td>
-                                    <a href="javascript:void(0)" class="deleteQcategory tooltip" id="del_{{catId}}">
+                                <td><a href="javascript:void(0)" class="deleteQcategory tooltip" id="del_{{catId}}">
                                         <i class="fa fa-trash"></i>
                                         <span class="tooltiptext">Delete</span>
                                     </a>
@@ -96,10 +92,11 @@
                             
                             {{#each subcat}}
                             <tr style="">
-                                <td>{{../title}}</td>
+                                
                                 <td><a href="javascript:void(0);" class="editCategory" id="{{subCatId}}">
                                     {{subtitle}}
                                 </a></td>
+                                <td>{{../title}}</td>
 
                                 <td>
                                     <a href="javascript:void(0)" class="deleteQcategory tooltip" id="del_{{subCatId}}">
