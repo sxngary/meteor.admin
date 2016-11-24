@@ -10,7 +10,9 @@ Template.addAgreement.helpers({
 //On rendered event of add template.
 Template.addAgreement.onRendered(function(){
     $(function() {
-	$('#agreement_body').froalaEditor();	
+	$('#agreement_body').froalaEditor({
+        height: 300
+    });	
     });
         
     $('#frmAgreement').parsley({
