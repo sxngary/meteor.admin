@@ -3,3 +3,4 @@ node_modules/
 *.DS_Store
 .idea/
 .meteor/dev_bundle
+run.sh
