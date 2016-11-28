@@ -46,7 +46,7 @@ Template.agreements.events({
         Meteor.call('insertAgreementTemplate', data, id, function(err, res){
             if(err){
                 sAlert.error(err.reason, {effect: 'bouncyflip', position: 'top-right', timeout: 5000, onRouteClose: true, stack: false, offset: '80px'});
-                $('#openAgreement').modal('close');
+                //$('#openAgreement').modal('close');
             }else{
                 //console.log(res);
                 if (res.status) {
