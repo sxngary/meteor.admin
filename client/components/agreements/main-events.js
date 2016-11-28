@@ -13,6 +13,7 @@ Template.agreements.events({
         if (agreementsData) {
             Session.set('agreementData',agreementsData);
             $('#agreement_body').froalaEditor('html.set', agreementsData.agreementBody);
+            $('#agreement_body').froalaEditor('events.disableBlur');
             $('#openAgreement').modal('open');
         }
     },

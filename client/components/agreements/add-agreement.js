@@ -20,6 +20,10 @@ Template.addAgreement.onRendered(function(){
     });
 });
 
+Template.addAgreement.onDestroyed(function(){
+    $('.modal-overlay').css('display','none');
+});
+
 
 Template.viewAgreement.helpers({
     viewAgreementData : function(){

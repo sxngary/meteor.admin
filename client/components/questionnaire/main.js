@@ -87,6 +87,7 @@ Template.questionnaire.onRendered(function () {
 
 Template.questionnaire.onDestroyed(function () {
     Session.set('questionnaireId', undefined);
+    $('.modal-overlay').css('display','none');
 })
 
 

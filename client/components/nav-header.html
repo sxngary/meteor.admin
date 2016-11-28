@@ -24,7 +24,7 @@
     <ul id="nav-mobile" class="side-nav left-bar fixed">
         {{#if currentUser}}
             <li class="admin-pro"></li>
-            <li class="bold"><a href="/"  class="waves-effect waves-tea"> Dashboard</a></li>
+            <li class="bold {{activeClass 'dashboard'}}"><a href="/"  class="waves-effect waves-tea"> Dashboard</a></li>
             <ul class="collapsible collapsible-accordion">
                 <li class="bold"><a href="#" class="collapsible-header  waves-effect"> User Management<span><i class="zmdi zmdi-chevron-right"></i></span></a>
                 <section class="collapsible-body">
@@ -35,8 +35,8 @@
                 </section>
                 </li>
             </ul>
-            <li class="bold"><a href="/questionnaire" class="waves-effect"> Questionnaire</a></li>
-            <li class="bold"><a href="/agreements" class="waves-effect"> Agreements</a></li>
+            <li class="bold {{activeClass 'questionnaire'}}"><a href="/questionnaire" class="waves-effect"> Questionnaire</a></li>
+            <li class="bold {{activeClass 'agreements'}}"><a href="/agreements" class="waves-effect"> Agreements</a></li>
             <li class="bold"><a href="#" class="waves-effect"> Education Management</a></li>
             <li class="bold"><a href="#" class="waves-effect"> Lab Management</a></li>
             <li class="bold"><a href="#" class="waves-effect"> Settings</a></li>

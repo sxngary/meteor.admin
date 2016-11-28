@@ -215,4 +215,8 @@ Template.questionForm.events({
 
         });
     }
-})
+});
+
+Template.questionForm.onDestroyed(function(){
+    $('.modal-overlay').css('display','none');
+});
