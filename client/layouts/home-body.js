@@ -11,10 +11,10 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import '/client/components/loading.js';
 //import '/client/components/nav-header.js';
 
-Template.home_body.onRendered(() => {
-    //jQuery(function($){
-    //  $(".button-collapse").sideNav();
-    //  $('select').material_select();
-    //  $('ul.tabs').tabs();
-    //})
-})
+//Template.home_body.onRendered(() => {
+//    //jQuery(function($){
+//    //  $(".button-collapse").sideNav();
+//    //  $('select').material_select();
+//    //  $('ul.tabs').tabs();
+//    //})
+//})
