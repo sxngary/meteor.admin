@@ -402,13 +402,13 @@ Template.questionnaire.events({
 		event.preventDefault();
 
 		var dependencyQuestion = [];
-		if (data.find("#dependency").value != 'null') {
+		/*if (data.find("#dependency").value != 'null') {
 			var haArr = [];
 			$('#dependencyAns :selected').each(function (i, selected) {
 				haArr.push({ answers: $(selected).val() });
 			});
 			dependencyQuestion.push({ dependencyQuestion: data.find("#dependency").value, dependencyAnswer: haArr });
-		}
+		}*/
 		var questionData = {
 			question: data.find("#questionDef").value,
 			helper: "",
@@ -572,11 +572,69 @@ Template.questionnaire.events({
 				}
 
 				$('ul.tabs').tabs();
+				$( "#selectedQues" ).sortable({
+					stop: function(e, ui) {
+						el = ui.item.get(0);
+						before = ui.item.prev().get(0);
+						after = ui.item.next().get(0);
+						if(!before) {
+							//if it was dragged into the first position grab the
+							// next element's data context and subtract one from the rank
+							newRank = Blaze.getData(after).rank - 1;
+						} else if(!after) {
+							//if it was dragged into the last position grab the
+							//  previous element's data context and add one to the rank
+							newRank = Blaze.getData(before).rank + 1
+						} else{
+							//else take the average of the two ranks of the previous
+							// and next elements
+							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+						}
+						//console.log("newRank:", newRank);
+
+						var categoryId = Blaze.getData(el).mainCatId;
+						var allQuestion = Session.get("allQuestion");
+						for (var i=0; i<allQuestion.length; i++) {
+							if (allQuestion[i] ['mainCatId'] == categoryId) {
+								allQuestion[i] ["rank"] = newRank;
+							}
+						}
+						Session.set("allQuestion", allQuestion);
+					}
+				});
+
+				$( "#selectedQues > li > div > ul.sub-accordion" ).sortable({
+					stop: function(e, ui) {
+						el = ui.item.get(0);
+						before = ui.item.prev().get(0);
+						after = ui.item.next().get(0);
+						if(!before) {
+							//if it was dragged into the first position grab the
+							// next element's data context and subtract one from the rank
+							newRank = Blaze.getData(after).rank - 1;
+						} else if(!after) {
+							//if it was dragged into the last position grab the
+							//  previous element's data context and add one to the rank
+							newRank = Blaze.getData(before).rank + 1
+						} else{
+							//else take the average of the two ranks of the previous
+							// and next elements
+							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+						}
+						//console.log("newRank:", newRank);
+
+						var elem = Blaze.getData(el);
+						var allQuestion = Session.get("allQuestion");
+						allQuestion[elem.i1] ['mainCatQuestion'] [elem.i2] ['rank'] = newRank;
+						//console.log("allQuestion:", allQuestion);
+						Session.set("allQuestion", allQuestion);
+					}
+				})
 			}
 		});
 		$('#questionnairePopup').modal("open");
 
-		Session.set("questionnaireItem", completeArr);
+		Session.set("questionnaireItem", completeArr);	
 	},
 	
 	//------update questionnaire---------rpm---//
@@ -591,13 +649,18 @@ Template.questionnaire.events({
 			/*Questionnaire Question add: Start*/
 			if (Session.get("allQuestion")) {
 				var allQuestion = Session.get("allQuestion");
+				//console.log("allQuestionArray:",allQuestion);
 
 				for (var q = 0; q < allQuestion.length; q++) {
 					var questionArray = [];
 
 					if (allQuestion[q].mainCatQuestion) {
 						for (var s = 0; s < allQuestion[q].mainCatQuestion.length; s++) {
-							questionArray.push({ _id: allQuestion[q].mainCatQuestion[s].questionId, level: allQuestion[q].mainCatQuestion[s].level, parentQsId: allQuestion[q].mainCatQuestion[s].parentQsId });
+							let newObj = { _id: allQuestion[q].mainCatQuestion[s].questionId, level: allQuestion[q].mainCatQuestion[s].level, parentQsId: allQuestion[q].mainCatQuestion[s].parentQsId };
+							if (typeof allQuestion[q].mainCatQuestion[s].rank !== "undefined") {
+								newObj['rank'] = Number(allQuestion[q].mainCatQuestion[s].rank);
+							}
+							questionArray.push(newObj);
 						}
 					}
 
@@ -612,11 +675,11 @@ Template.questionnaire.events({
 							categoryQuestionArray.push({ subCategory_id: allQuestion[q].subCategory[c].subCatId, questions: subQuestionArray });
 
 						}
-						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray, subCategories: categoryQuestionArray });
+						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray, subCategories: categoryQuestionArray, rank: Number(allQuestion[q].rank) });
 					} else {
-						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray });
+						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray, rank: Number(allQuestion[q].rank) });
 					}
-					//console.log("allQuestionArray11111111",allQuestionArray);
+					//console.log("allQuestionArray:",allQuestionArray);
 				}
 
 			}
@@ -698,20 +761,29 @@ Template.questionnaire.events({
 								var alreadySelectedQs = allQuestion[selectedindex]['mainCatQuestion'];
 								var filterQuestion = _.findWhere(alreadySelectedQs, { questionId: questionData[0].questionId });
 								if (!filterQuestion) {
+									let alreadySelectedQsLen = alreadySelectedQs.length;
+									if (alreadySelectedQsLen) {
+										questionData[0] ['rank'] = allQuestion[selectedindex]['mainCatQuestion'][alreadySelectedQsLen-1].rank + 1;
+									} else {
+										questionData[0] ['rank'] = 1;
+									}
 									var fullArr = alreadySelectedQs.concat(questionData);
 									allQuestion[selectedindex]['mainCatQuestion'] = fullArr;
 								} else {
 									//allQuestion[selectedindex]['mainCatQuestion'] = questionData;
 								}
 							} else {
+								questionData[0] ['rank'] = 1;
 								allQuestion[selectedindex]['mainCatQuestion'] = questionData;
 							}
 						} else {
 							var index = "0";
-							allQuestion.push({ index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: categoryQuestion[0].cat_name, parentCatColor: parentCatColor, mainCatQuestion: questionData });
+							questionData[0] ['rank'] = 1;
+							allQuestion.push({ rank: (allQuestion.length + 1), index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: categoryQuestion[0].cat_name, parentCatColor: parentCatColor, mainCatQuestion: questionData });
 						}
 					} else {
-						allQuestion.push({ index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: categoryQuestion[0].cat_name, parentCatColor: parentCatColor, mainCatQuestion: questionData });
+						questionData[0] ['rank'] = 1;
+						allQuestion.push({ rank: 1, index: index, mainCatId: clickQuestion[0].category, parentCatId: clickQuestion[0].category, parentCat: categoryQuestion[0].cat_name, parentCatColor: parentCatColor, mainCatQuestion: questionData });
 					}
 				} else {
 					var index = "0";
@@ -782,12 +854,12 @@ Template.questionnaire.events({
 								var index = "0";
 								var subCatArr = [];
 								subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
-								allQuestion.push({ index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
+								allQuestion.push({ rank: (allQuestion.length + 1), index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
 							}
 						} else {
 							var subCatArr = [];
 							subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
-							allQuestion.push({ index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
+							allQuestion.push({ rank: 1, index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
 							//allQuestion.push({index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCat[0].en, parentCatColor: parentCatColor,childCatName: catName,childCatColor: categoryQuestion[0].cat_color,SubcatQuestions: questionData});
 						}
 					}

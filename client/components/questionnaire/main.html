@@ -320,7 +320,7 @@
                                         {{#if questionDrop}}
                                         <ul class="collapsible" data-collapsible="accordion" id="selectedQues">
                                             {{#each questionDrop}}
-                                            <li>
+                                            <li class="ui-state-default">
                                                 <div class="collapsible-header" style="background:{{parentCatColor}}">{{parentCat}}</div>
                                                 <div class="collapsible-body" style="border-left:10px solid {{parentCatColor}}">
                                                     <ul class="sub-accordion">
@@ -546,11 +546,11 @@
                                                    <!-- </div>
                                                 </div>-->
                                             </div>
-                                            <div class="row">
-                                            <div class="input-field col m8 mt40">
+                                            <!--<div class="row">
+                                            <div class="input-field col m8 mt40">-->
                                                 <!--<div class="rowminus">
                                                     <div class="col m12 s12">-->
-                                                        <select class="browser-default" name="dependency" id="dependency" required>
+                                                        <!--<select class="browser-default" name="dependency" id="dependency" required>
                                                             <option value="null" selected>Primary Question</option>
                                                             {{#if questionSet}}
                                                             {{#each questionSet}}
@@ -559,14 +559,14 @@
                                                             {{/each}}
                                                             {{/if}}
                                                         </select>
-                                                        <label class="active" for="title">Dependency Question </label>
+                                                        <label class="active" for="title">Dependency Question </label>-->
                                                     <!--</div>-->
                                                     <!--  <div class="col m4 s12 s-mb20-mob">
                                                         <a class="tooltipped" data-position="bottom" data-delay="50" data-tooltip=" Select dependency question if only display upon an answer from a previous question e.g. Requires Yes to vigorous exercise. Otherwise leave as Primary Question "><i class="mdi-action-info-outline"></i></a>
                                                         </div> -->
                                                 <!--</div>-->
-                                            </div>
-                                            </div>
+                                            <!--</div>
+                                            </div>-->
                                             {{#if answerSet}}
                                             <div class="row">
                                             <div class="input-field col m8 mt40">

@@ -499,6 +499,7 @@ Template.questionnaire.helpers({
                     }
                 }
             }
+            //console.log("allQuestion:", allQuestion);
             Session.set('allQuestion', allQuestion);
 
             return allQuestion;
