@@ -254,7 +254,8 @@ Meteor.methods({
                                             questionType: mainQuestion[0].question_type,
                                             dependency: mainQuestion[0].dependency,
                                             gender: mainQuestion[0].gender,
-                                            resetOptionsIndex: mainQuestion[0].resetOptionsIndex
+                                            resetOptionsIndex: mainQuestion[0].resetOptionsIndex,
+                                            rank: questionnaire[0].questions[i].question[j].rank
                                         });
                                     } else {
                                         mainCatQuestion.push({
@@ -265,9 +266,14 @@ Meteor.methods({
                                             questionType: mainQuestion[0].question_type,
                                             dependency: mainQuestion[0].dependency,
                                             gender: mainQuestion[0].gender,
-                                            resetOptionsIndex: mainQuestion[0].resetOptionsIndex
+                                            resetOptionsIndex: mainQuestion[0].resetOptionsIndex,
+                                            rank: questionnaire[0].questions[i].question[j].rank
                                         });
                                     }
+                                    
+                                    mainCatQuestion = _.sortBy(mainCatQuestion, function (o) {
+                                        return o.rank;
+                                    });
                                 }
                             }
                         }

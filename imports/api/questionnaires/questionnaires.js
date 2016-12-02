@@ -39,6 +39,10 @@ Schema.Questionnaires = new SimpleSchema({
         type: String,
         optional: true
     },
+    "questions.$.question.$.rank": {
+        type: Number,
+        optional: true
+    },
     "questions.$.question.$.parentQsId": {
         type: String,
         optional: true

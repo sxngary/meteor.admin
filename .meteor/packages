@@ -11,6 +11,7 @@ less@2.7.5
 #twbs:bootstrap
 fourseven:scss
 #materialize:materialize
+claviska:jquery-minicolors
 
 # ui
 blaze-html-templates@1.0.4
