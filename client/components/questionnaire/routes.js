@@ -1,4 +1,5 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
+//import { FlowRouterTitle } from 'meteor/ostrio:flow-router-title';
 
 FlowRouter.route('/questionnaire', {
     triggersEnter: [AccountsTemplates.ensureSignedIn],
@@ -18,3 +19,5 @@ FlowRouter.route("/question/:id", {
         BlazeLayout.render("App_body", {main: "questionForm"});
     }
 });
+
+//new FlowRouterTitle(FlowRouter);

@@ -92,6 +92,8 @@ npm-bcrypt@0.9.1
 npm-mongo@1.5.48
 observe-sequence@1.0.12
 ordered-dict@1.0.8
+ostrio:flow-router-extra@2.12.5
+ostrio:flow-router-title@2.1.4
 percolate:momentum@0.7.2
 percolate:velocityjs@1.1.0
 practicalmeteor:chai@2.1.0_1

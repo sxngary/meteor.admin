@@ -1,6 +1,7 @@
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { AccountsTemplates } from 'meteor/useraccounts:core';
+//import { FlowRouterTitle } from 'meteor/ostrio:flow-router-title';
 
 import '/client/layouts/app-body.js';
 import '/client/pages/app-not-found.js';
@@ -49,3 +50,5 @@ AccountsTemplates.configureRoute('resetPwd', {
   name: 'resetPwd',
   path: '/reset-password',
 });
+
+//new FlowRouterTitle(FlowRouter);

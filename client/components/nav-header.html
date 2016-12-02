@@ -6,11 +6,7 @@
                     <a href="#!" class="brand-logo"><img src="images/logo.png" alt=""/></a>                    
                     <ul class="right hide-on-med-and-down">
                         {{#if currentUser}}
-                            <!--<li><a href="#"><i class="zmdi zmdi-assignment-alert"></i></a></li>-->
                             <li class="logout"><a >{{_ 'Logout'}}</a></li>
-                        <!--{{else}}
-                            <li class="bold {{isActiveRoute 'signin'}}"><a href="{{pathFor 'signin'}}">{{_ 'Sign In'}}</a></li>
-                            <li class="bold {{isActiveRoute 'join'}}"><a href="{{pathFor 'join'}}">{{_ 'Join'}}</a></li>-->
                         {{/if}}
                     </ul>
                 </section>
@@ -24,8 +20,8 @@
     <ul id="nav-mobile" class="side-nav left-bar fixed">
         {{#if currentUser}}
             <li class="admin-pro"></li>
-            <li class="bold {{activeClass 'dashboard'}}"><a href="/"  class="waves-effect waves-tea"> Dashboard</a></li>
             <ul class="collapsible collapsible-accordion">
+                <li class="bold {{activeClass 'dashboard'}}"><a href="/"  class="collapsible-header waves-effect waves-tea"> Dashboard</a></li>
                 <li class="bold"><a href="#" class="collapsible-header  waves-effect"> User Management<span><i class="zmdi zmdi-chevron-right"></i></span></a>
                 <section class="collapsible-body">
                     <ul>
@@ -34,12 +30,13 @@
                     </ul>
                 </section>
                 </li>
+                <li class="bold {{activeClass 'questionnaire'}}"><a href="/questionnaire" class="collapsible-header waves-effect"> Questionnaire</a></li>
+            <li class="bold {{activeClass 'agreements'}}"><a href="/agreements" class="collapsible-header waves-effect"> Agreements</a></li>
+            <li class="bold"><a href="#" class="collapsible-header waves-effect"> Education Management</a></li>
+            <li class="bold"><a href="#" class="collapsible-header waves-effect"> Lab Management</a></li>
+            <li class="bold"><a href="#" class="collapsible-header waves-effect"> Settings</a></li>
             </ul>
-            <li class="bold {{activeClass 'questionnaire'}}"><a href="/questionnaire" class="waves-effect"> Questionnaire</a></li>
-            <li class="bold {{activeClass 'agreements'}}"><a href="/agreements" class="waves-effect"> Agreements</a></li>
-            <li class="bold"><a href="#" class="waves-effect"> Education Management</a></li>
-            <li class="bold"><a href="#" class="waves-effect"> Lab Management</a></li>
-            <li class="bold"><a href="#" class="waves-effect"> Settings</a></li>
+            
             <li class="bold logout"><a class="waves-effect"> {{_ 'Logout'}}</a></li>
         <!--{{else}}
             <li class="admin-pro"></li>
