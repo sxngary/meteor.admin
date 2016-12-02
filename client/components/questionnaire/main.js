@@ -497,6 +497,21 @@ Template.questionnaire.helpers({
                             allQuestion[i].mainCatQuestion = tmpArrQuestion;
                         }
                     }
+
+                    if (allQuestion[i].subCategory && allQuestion[i].subCategory.length) {
+                        for (let i2=0; i2<allQuestion[i].subCategory.length; i2++) {
+                            allQuestion[i].subCategory[i2] ['i1'] = i;
+                            allQuestion[i].subCategory[i2] ['i2'] = i2;
+
+                            if (allQuestion[i].subCategory[i2].SubcatQuestions) {
+                                for (let i3=0; i3<allQuestion[i].subCategory[i2].SubcatQuestions.length;i3++) {
+                                    allQuestion[i].subCategory[i2].SubcatQuestions[i3] ['i1'] = i;
+                                    allQuestion[i].subCategory[i2].SubcatQuestions[i3] ['i2'] = i2;
+                                    allQuestion[i].subCategory[i2].SubcatQuestions[i3] ['i3'] = i3;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             //console.log("allQuestion:", allQuestion);

@@ -604,6 +604,7 @@ Template.questionnaire.events({
 				});
 
 				$( "#selectedQues > li > div > ul.sub-accordion" ).sortable({
+					items: "> li",
 					stop: function(e, ui) {
 						el = ui.item.get(0);
 						before = ui.item.prev().get(0);
@@ -629,7 +630,66 @@ Template.questionnaire.events({
 						//console.log("allQuestion:", allQuestion);
 						Session.set("allQuestion", allQuestion);
 					}
-				})
+				});
+
+				$( "#selectedQues > li > div > ul.sub-accordion" ).sortable({
+					items: "ul.subcategories",
+					stop: function(e, ui) {
+						el = ui.item.get(0);
+						before = ui.item.prev().get(0);
+						after = ui.item.next().get(0);
+						if(!before) {
+							//if it was dragged into the first position grab the
+							// next element's data context and subtract one from the rank
+							newRank = Blaze.getData(after).rank - 1;
+						} else if(!after) {
+							//if it was dragged into the last position grab the
+							//  previous element's data context and add one to the rank
+							newRank = Blaze.getData(before).rank + 1
+						} else{
+							//else take the average of the two ranks of the previous
+							// and next elements
+							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+						}
+						//console.log("newRank:", newRank);
+
+						var elem = Blaze.getData(el);
+						//console.log("elem:", elem);
+						var allQuestion = Session.get("allQuestion");
+						allQuestion[elem.i1] ['subCategory'] [elem.i2] ['rank'] = newRank;
+						//console.log("allQuestion:", allQuestion);
+						Session.set("allQuestion", allQuestion);
+					}
+				});
+
+				$( "#selectedQues > li > div > ul.sub-accordion ul.subcategories ul.sub-accordion" ).sortable({
+					items: "> li",
+					stop: function(e, ui) {
+						el = ui.item.get(0);
+						before = ui.item.prev().get(0);
+						after = ui.item.next().get(0);
+						if(!before) {
+							//if it was dragged into the first position grab the
+							// next element's data context and subtract one from the rank
+							newRank = Blaze.getData(after).rank - 1;
+						} else if(!after) {
+							//if it was dragged into the last position grab the
+							//  previous element's data context and add one to the rank
+							newRank = Blaze.getData(before).rank + 1
+						} else{
+							//else take the average of the two ranks of the previous
+							// and next elements
+							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+						}
+						//console.log("newRank:", newRank);
+
+						var elem = Blaze.getData(el);
+						console.log("elem:", elem);
+						var allQuestion = Session.get("allQuestion");
+						allQuestion[elem.i1] ['subCategory'] [elem.i2] ['SubcatQuestions'] [elem.i3] ['rank'] = newRank;
+						Session.set("allQuestion", allQuestion);
+					}
+				});
 			}
 		});
 		$('#questionnairePopup').modal("open");
@@ -670,9 +730,18 @@ Template.questionnaire.events({
 
 							var subQuestionArray = [];
 							for (var d = 0; d < allQuestion[q].subCategory[c].SubcatQuestions.length; d++) {
-								subQuestionArray.push({ _id: allQuestion[q].subCategory[c].SubcatQuestions[d].questionId, level: allQuestion[q].subCategory[c].SubcatQuestions[d].level, parentQsId: allQuestion[q].subCategory[c].SubcatQuestions[d].parentQsId });
+								subQuestionArray.push({ 
+									_id: allQuestion[q].subCategory[c].SubcatQuestions[d].questionId, 
+									level: allQuestion[q].subCategory[c].SubcatQuestions[d].level, 
+									parentQsId: allQuestion[q].subCategory[c].SubcatQuestions[d].parentQsId,
+									rank: allQuestion[q].subCategory[c].SubcatQuestions[d].rank 
+								});
 							}
-							categoryQuestionArray.push({ subCategory_id: allQuestion[q].subCategory[c].subCatId, questions: subQuestionArray });
+							let newObj = { subCategory_id: allQuestion[q].subCategory[c].subCatId, questions: subQuestionArray };
+							if (typeof allQuestion[q].subCategory[c].rank !== "undefined") {
+								newObj['rank'] = Number(allQuestion[q].subCategory[c].rank);
+							}
+							categoryQuestionArray.push(newObj);
 
 						}
 						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray, subCategories: categoryQuestionArray, rank: Number(allQuestion[q].rank) });

@@ -322,7 +322,8 @@ Meteor.methods({
                                             questionType: subQuestion[0].question_type,
                                             dependency: subQuestion[0].dependency,
                                             gender: subQuestion[0].gender,
-                                            resetOptionsIndex: subQuestion[0].resetOptionsIndex
+                                            resetOptionsIndex: subQuestion[0].resetOptionsIndex,
+                                            rank: questionnaire[0].questions[i].subCategories[k].questions[l].rank
                                         });
                                     } else {
                                         SubcatQuestions.push({
@@ -333,15 +334,28 @@ Meteor.methods({
                                             questionType: subQuestion[0].question_type,
                                             dependency: subQuestion[0].dependency,
                                             gender: subQuestion[0].gender,
-                                            resetOptionsIndex: subQuestion[0].resetOptionsIndex
+                                            resetOptionsIndex: subQuestion[0].resetOptionsIndex,
+                                            rank: questionnaire[0].questions[i].subCategories[k].questions[l].rank
                                         });
                                     }
                                 } else {
                                     break;
                                 }
                             }
-                            subCategoryArray.push({ subCatTitle: subCatTitle, subCatId: subCategory[0]._id, subCatColor: subCategory[0].cat_color, SubcatQuestions: SubcatQuestions });
+
+                            SubcatQuestions = _.sortBy(SubcatQuestions, function (o) {
+                                return o.rank;
+                            });
+
+                            let newObj = { subCatTitle: subCatTitle, subCatId: subCategory[0]._id, subCatColor: subCategory[0].cat_color, SubcatQuestions: SubcatQuestions };
+                            if (typeof questionnaire[0].questions[i].subCategories[k].rank !== "undefined") {
+                                newObj["rank"] = Number(questionnaire[0].questions[i].subCategories[k].rank);
+                            }
+                            subCategoryArray.push(newObj);
                         }
+                        subCategoryArray = _.sortBy(subCategoryArray, function (o) {
+                            return o.rank;
+                        });
                         allQuestionArray.push({ rank: questionnaire[0].questions[i].rank, index: questionnaire[0].questions[i].main_index, mainCatId: questionnaire[0].questions[i].category_id, parentCat: parentCat, parentCatColor: mainCategory[0].cat_color, parentCatId: questionnaire[0].questions[i].category_id, mainCatQuestion: mainCatQuestion, subCategory: subCategoryArray })
                     } else {
                         allQuestionArray.push({ rank: questionnaire[0].questions[i].rank, index: questionnaire[0].questions[i].main_index, mainCatId: questionnaire[0].questions[i].category_id, parentCat: parentCat, parentCatColor: mainCategory[0].cat_color, parentCatId: questionnaire[0].questions[i].category_id, mainCatQuestion: mainCatQuestion })
