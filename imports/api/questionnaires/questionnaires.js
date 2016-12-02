@@ -55,6 +55,10 @@ Schema.Questionnaires = new SimpleSchema({
         type: String,
         optional: true
     },
+    "questions.$.subCategories.$.rank": {
+        type: Number,
+        optional: true
+    },
     "questions.$.subCategories.$.questions": {
         type: [Object],
         optional: true
@@ -65,6 +69,10 @@ Schema.Questionnaires = new SimpleSchema({
     },
     "questions.$.subCategories.$.questions.$.level": {
         type: String,
+        optional: true
+    },
+    "questions.$.subCategories.$.questions.$.rank": {
+        type: Number,
         optional: true
     },
     "questions.$.subCategories.$.questions.$.parentQsId": {

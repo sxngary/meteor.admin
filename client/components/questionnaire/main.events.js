@@ -572,6 +572,7 @@ Template.questionnaire.events({
 				}
 
 				$('ul.tabs').tabs();
+				// parent cat - sortable
 				$( "#selectedQues" ).sortable({
 					stop: function(e, ui) {
 						el = ui.item.get(0);
@@ -603,7 +604,9 @@ Template.questionnaire.events({
 					}
 				});
 
+				// parent cat ques - sortable
 				$( "#selectedQues > li > div > ul.sub-accordion" ).sortable({
+					items: "li.parent-cat",
 					stop: function(e, ui) {
 						el = ui.item.get(0);
 						before = ui.item.prev().get(0);
@@ -629,7 +632,68 @@ Template.questionnaire.events({
 						//console.log("allQuestion:", allQuestion);
 						Session.set("allQuestion", allQuestion);
 					}
-				})
+				});
+
+				// child cat - sortable
+				$( "#selectedQues > li > div > ul.sub-accordion li.sub-categories" ).sortable({
+					items: "ul",
+					stop: function(e, ui) {
+						el = ui.item.get(0);
+						before = ui.item.prev().get(0);
+						after = ui.item.next().get(0);
+						if(!before) {
+							//if it was dragged into the first position grab the
+							// next element's data context and subtract one from the rank
+							newRank = Blaze.getData(after).rank - 1;
+						} else if(!after) {
+							//if it was dragged into the last position grab the
+							//  previous element's data context and add one to the rank
+							newRank = Blaze.getData(before).rank + 1
+						} else{
+							//else take the average of the two ranks of the previous
+							// and next elements
+							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+						}
+						//console.log("newRank:", newRank);
+
+						var elem = Blaze.getData(el);
+						//console.log("elem:", elem);
+						var allQuestion = Session.get("allQuestion");
+						allQuestion[elem.i1] ['subCategory'] [elem.i2] ['rank'] = newRank;
+						//console.log("allQuestion:", allQuestion);
+						Session.set("allQuestion", allQuestion);
+					}
+				});
+
+				// child cat ques - sortable
+				$( "#selectedQues > li > div > ul.sub-accordion li.sub-categories ul.sub-accordion" ).sortable({
+					items: "li.child-cat",
+					stop: function(e, ui) {
+						el = ui.item.get(0);
+						before = ui.item.prev().get(0);
+						after = ui.item.next().get(0);
+						if(!before) {
+							//if it was dragged into the first position grab the
+							// next element's data context and subtract one from the rank
+							newRank = Blaze.getData(after).rank - 1;
+						} else if(!after) {
+							//if it was dragged into the last position grab the
+							//  previous element's data context and add one to the rank
+							newRank = Blaze.getData(before).rank + 1
+						} else{
+							//else take the average of the two ranks of the previous
+							// and next elements
+							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+						}
+						//console.log("newRank:", newRank);
+
+						var elem = Blaze.getData(el);
+						//console.log("elem:", elem);
+						var allQuestion = Session.get("allQuestion");
+						allQuestion[elem.i1] ['subCategory'] [elem.i2] ['SubcatQuestions'] [elem.i3] ['rank'] = newRank;
+						Session.set("allQuestion", allQuestion);
+					}
+				});
 			}
 		});
 		$('#questionnairePopup').modal("open");
@@ -670,9 +734,18 @@ Template.questionnaire.events({
 
 							var subQuestionArray = [];
 							for (var d = 0; d < allQuestion[q].subCategory[c].SubcatQuestions.length; d++) {
-								subQuestionArray.push({ _id: allQuestion[q].subCategory[c].SubcatQuestions[d].questionId, level: allQuestion[q].subCategory[c].SubcatQuestions[d].level, parentQsId: allQuestion[q].subCategory[c].SubcatQuestions[d].parentQsId });
+								subQuestionArray.push({ 
+									_id: allQuestion[q].subCategory[c].SubcatQuestions[d].questionId, 
+									level: allQuestion[q].subCategory[c].SubcatQuestions[d].level, 
+									parentQsId: allQuestion[q].subCategory[c].SubcatQuestions[d].parentQsId,
+									rank: allQuestion[q].subCategory[c].SubcatQuestions[d].rank 
+								});
 							}
-							categoryQuestionArray.push({ subCategory_id: allQuestion[q].subCategory[c].subCatId, questions: subQuestionArray });
+							let newObj = { subCategory_id: allQuestion[q].subCategory[c].subCatId, questions: subQuestionArray };
+							if (typeof allQuestion[q].subCategory[c].rank !== "undefined") {
+								newObj['rank'] = Number(allQuestion[q].subCategory[c].rank);
+							}
+							categoryQuestionArray.push(newObj);
 
 						}
 						allQuestionArray.push({ main_index: allQuestion[q].index, category_id: allQuestion[q].mainCatId, question: questionArray, subCategories: categoryQuestionArray, rank: Number(allQuestion[q].rank) });
@@ -767,6 +840,8 @@ Template.questionnaire.events({
 									} else {
 										questionData[0] ['rank'] = 1;
 									}
+									//console.log("questionData:", questionData);
+									//console.log("alreadySelectedQs:", alreadySelectedQs);
 									var fullArr = alreadySelectedQs.concat(questionData);
 									allQuestion[selectedindex]['mainCatQuestion'] = fullArr;
 								} else {
@@ -826,6 +901,14 @@ Template.questionnaire.events({
 											var filterQuestionData = _.findWhere(alreadySelectedQs, { questionId: questionData[0].questionId });
 											if (!filterQuestionData) {
 												subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
+
+												let alreadySelectedQsLen = alreadySelectedQs.length;
+												if (alreadySelectedQsLen) {
+													questionData[0] ['rank'] = allQuestion[selectedindex]['subCategory'][newIndex]['SubcatQuestions'] [alreadySelectedQsLen-1].rank + 1;
+												} else {
+													questionData[0] ['rank'] = 1;
+												}
+
 												var fullArr = alreadySelectedQs.concat(questionData);
 												//console.log("fullArr::", fullArr)
 												allQuestion[selectedindex]['subCategory'][newIndex]['SubcatQuestions'] = fullArr;
@@ -834,31 +917,53 @@ Template.questionnaire.events({
 
 											}
 										} else {
+											questionData[0] ["rank"] = 1;
 											subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
+
+											let alreadySelectedCatLen = alreadySelectedCat.length;
+											if (alreadySelectedCatLen) {
+												subCatArr[0] ['rank'] = allQuestion[selectedindex]['subCategory'][alreadySelectedCatLen-1].rank + 1;
+											} else {
+												subCatArr[0] ['rank'] = 1;
+											}
+
 											var fullArr = alreadySelectedCat.concat(subCatArr);
 											allQuestion[selectedindex]['subCategory'] = fullArr;
 										}
 
 									} else if (newIndex < 0) {
+										questionData[0] ["rank"] = 1;
+										
 										var subCatArr = [];
 										subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
+										
+										let alreadySelectedCatLen = alreadySelectedCat.length;
+										if (alreadySelectedCatLen) {
+											subCatArr[0] ['rank'] = allQuestion[selectedindex]['subCategory'][alreadySelectedCatLen-1].rank + 1;
+										} else {
+											subCatArr[0] ['rank'] = 1;
+										}
+										
 										var fullArr = alreadySelectedCat.concat(subCatArr);
 										allQuestion[selectedindex]['subCategory'] = fullArr;
 									}
 								} else {
+									questionData[0] ["rank"] = 1;
 									var subCatArr = [];
-									subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
+									subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData, rank: 1 });
 									allQuestion[selectedindex]['subCategory'] = subCatArr;
 								}
 							} else {
 								var index = "0";
+								questionData[0] ["rank"] = 1;
 								var subCatArr = [];
-								subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
+								subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData, rank: 1 });
 								allQuestion.push({ rank: (allQuestion.length + 1), index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
 							}
 						} else {
+							questionData[0] ["rank"] = 1;
 							var subCatArr = [];
-							subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData });
+							subCatArr.push({ subCatId: categoryQuestion[0]._id, subCatColor: categoryQuestion[0].cat_color, subCatTitle: catName, SubcatQuestions: questionData, rank: 1 });
 							allQuestion.push({ rank: 1, index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCatVal[0].cat_name, parentCatColor: parentCatColor, childCatName: catName, childCatColor: categoryQuestion[0].cat_color, subCategory: subCatArr });
 							//allQuestion.push({index: index, mainCatId: parentCatVal[0]._id, parentCatId: clickQuestion[0].category, parentCat: parentCat[0].en, parentCatColor: parentCatColor,childCatName: catName,childCatColor: categoryQuestion[0].cat_color,SubcatQuestions: questionData});
 						}

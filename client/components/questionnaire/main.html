@@ -325,20 +325,20 @@
                                                 <div class="collapsible-body" style="border-left:10px solid {{parentCatColor}}">
                                                     <ul class="sub-accordion">
                                                         {{#each mainCatQuestion}}
-                                                        <li class="level-{{level}}">
+                                                        <li class="level-{{level}} parent-cat">
                                                             <span class="q-title">{{Qtitle}}</span>
                                                             <a class="arrowremove tooltip" href="javascript:void(0);" qs-id="{{questionId}}"><i class="fa fa-angle-left"></i>
                                                             <span class="tooltiptext">Remove</span>
                                                             </a>
                                                         </li>
-                                                        {{/each}} {{#if subCategory}} {{#each subCategory}}
+                                                        {{/each}} {{#if subCategory}} <li class="sub-categories"> {{#each subCategory}}
                                                         <ul class="collapsible" data-collapsible="accordion">
                                                             <li>
                                                                 <div class="collapsible-header" style="background:{{subCatColor}}">{{subCatTitle}}</div>
                                                                 <div class="collapsible-body" style="border-left:10px solid {{subCatColor}}">
                                                                     <ul class="sub-accordion">
                                                                         {{#each SubcatQuestions}}
-                                                                        <li class="level-{{level}}">
+                                                                        <li class="level-{{level}} child-cat">
                                                                             <span class="q-title">{{Qtitle}}</span>
                                                                             <a class="arrowremove tooltip" href="javascript:void(0);" qs-id="{{questionId}}"><i class="fa fa-angle-left"></i>
                                                                             <span class="tooltiptext">Remove</span>
@@ -349,7 +349,7 @@
                                                                 </div>
                                                             </li>
                                                         </ul>
-                                                        {{/each}} {{/if}}
+                                                        {{/each}} </li> {{/if}}
                                                     </ul>
                                                 </div>
                                             </li>
