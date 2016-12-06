@@ -571,129 +571,10 @@ Template.questionnaire.events({
 					$('#questionnaireSummary').froalaEditor('html.set', questionnaireData[0].summary);
 				}
 
-				$('ul.tabs').tabs();
-				// parent cat - sortable
-				$( "#selectedQues" ).sortable({
-					stop: function(e, ui) {
-						el = ui.item.get(0);
-						before = ui.item.prev().get(0);
-						after = ui.item.next().get(0);
-						if(!before) {
-							//if it was dragged into the first position grab the
-							// next element's data context and subtract one from the rank
-							newRank = Blaze.getData(after).rank - 1;
-						} else if(!after) {
-							//if it was dragged into the last position grab the
-							//  previous element's data context and add one to the rank
-							newRank = Blaze.getData(before).rank + 1
-						} else{
-							//else take the average of the two ranks of the previous
-							// and next elements
-							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
-						}
-						//console.log("newRank:", newRank);
-
-						var categoryId = Blaze.getData(el).mainCatId;
-						var allQuestion = Session.get("allQuestion");
-						for (var i=0; i<allQuestion.length; i++) {
-							if (allQuestion[i] ['mainCatId'] == categoryId) {
-								allQuestion[i] ["rank"] = newRank;
-							}
-						}
-						Session.set("allQuestion", allQuestion);
-					}
-				});
-
-				// parent cat ques - sortable
-				$( "#selectedQues > li > div > ul.sub-accordion" ).sortable({
-					items: "li.parent-cat",
-					stop: function(e, ui) {
-						el = ui.item.get(0);
-						before = ui.item.prev().get(0);
-						after = ui.item.next().get(0);
-						if(!before) {
-							//if it was dragged into the first position grab the
-							// next element's data context and subtract one from the rank
-							newRank = Blaze.getData(after).rank - 1;
-						} else if(!after) {
-							//if it was dragged into the last position grab the
-							//  previous element's data context and add one to the rank
-							newRank = Blaze.getData(before).rank + 1
-						} else{
-							//else take the average of the two ranks of the previous
-							// and next elements
-							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
-						}
-						//console.log("newRank:", newRank);
-
-						var elem = Blaze.getData(el);
-						var allQuestion = Session.get("allQuestion");
-						allQuestion[elem.i1] ['mainCatQuestion'] [elem.i2] ['rank'] = newRank;
-						//console.log("allQuestion:", allQuestion);
-						Session.set("allQuestion", allQuestion);
-					}
-				});
-
-				// child cat - sortable
-				$( "#selectedQues > li > div > ul.sub-accordion li.sub-categories" ).sortable({
-					items: "ul",
-					stop: function(e, ui) {
-						el = ui.item.get(0);
-						before = ui.item.prev().get(0);
-						after = ui.item.next().get(0);
-						if(!before) {
-							//if it was dragged into the first position grab the
-							// next element's data context and subtract one from the rank
-							newRank = Blaze.getData(after).rank - 1;
-						} else if(!after) {
-							//if it was dragged into the last position grab the
-							//  previous element's data context and add one to the rank
-							newRank = Blaze.getData(before).rank + 1
-						} else{
-							//else take the average of the two ranks of the previous
-							// and next elements
-							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
-						}
-						//console.log("newRank:", newRank);
-
-						var elem = Blaze.getData(el);
-						//console.log("elem:", elem);
-						var allQuestion = Session.get("allQuestion");
-						allQuestion[elem.i1] ['subCategory'] [elem.i2] ['rank'] = newRank;
-						//console.log("allQuestion:", allQuestion);
-						Session.set("allQuestion", allQuestion);
-					}
-				});
-
-				// child cat ques - sortable
-				$( "#selectedQues > li > div > ul.sub-accordion li.sub-categories ul.sub-accordion" ).sortable({
-					items: "li.child-cat",
-					stop: function(e, ui) {
-						el = ui.item.get(0);
-						before = ui.item.prev().get(0);
-						after = ui.item.next().get(0);
-						if(!before) {
-							//if it was dragged into the first position grab the
-							// next element's data context and subtract one from the rank
-							newRank = Blaze.getData(after).rank - 1;
-						} else if(!after) {
-							//if it was dragged into the last position grab the
-							//  previous element's data context and add one to the rank
-							newRank = Blaze.getData(before).rank + 1
-						} else{
-							//else take the average of the two ranks of the previous
-							// and next elements
-							newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
-						}
-						//console.log("newRank:", newRank);
-
-						var elem = Blaze.getData(el);
-						//console.log("elem:", elem);
-						var allQuestion = Session.get("allQuestion");
-						allQuestion[elem.i1] ['subCategory'] [elem.i2] ['SubcatQuestions'] [elem.i3] ['rank'] = newRank;
-						Session.set("allQuestion", allQuestion);
-					}
-				});
+				$('ul.questionnaire-tabs').tabs();
+				$('ul.questionnaire-tabs').tabs('select_tab', "main");
+				
+				initializeSortable();
 			}
 		});
 		$('#questionnairePopup').modal("open");
@@ -972,6 +853,8 @@ Template.questionnaire.events({
 				Session.set('allQuestion', allQuestion);
 			}
 		}
+
+		initializeSortable();
 	},
 	
 	//----------delete questionnaire--rpm---------//
@@ -1334,4 +1217,129 @@ function removeSingleQs(_selectedQns, mainIndex, subCatIndex, questionId) {
 		}
 	});
 	return _selectedQns;
+}
+
+function initializeSortable() {
+	// parent cat - sortable
+	$( "#selectedQues" ).sortable({
+		stop: function(e, ui) {
+			el = ui.item.get(0);
+			before = ui.item.prev().get(0);
+			after = ui.item.next().get(0);
+			if(!before) {
+				//if it was dragged into the first position grab the
+				// next element's data context and subtract one from the rank
+				newRank = Blaze.getData(after).rank - 1;
+			} else if(!after) {
+				//if it was dragged into the last position grab the
+				//  previous element's data context and add one to the rank
+				newRank = Blaze.getData(before).rank + 1
+			} else{
+				//else take the average of the two ranks of the previous
+				// and next elements
+				newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+			}
+			//console.log("newRank:", newRank);
+
+			var categoryId = Blaze.getData(el).mainCatId;
+			var allQuestion = Session.get("allQuestion");
+			for (var i=0; i<allQuestion.length; i++) {
+				if (allQuestion[i] ['mainCatId'] == categoryId) {
+					allQuestion[i] ["rank"] = newRank;
+				}
+			}
+			Session.set("allQuestion", allQuestion);
+		}
+	});
+
+	// parent cat ques - sortable
+	$( "#selectedQues > li > div > ul.sub-accordion" ).sortable({
+		items: "li.parent-cat",
+		stop: function(e, ui) {
+			el = ui.item.get(0);
+			before = ui.item.prev().get(0);
+			after = ui.item.next().get(0);
+			if(!before) {
+				//if it was dragged into the first position grab the
+				// next element's data context and subtract one from the rank
+				newRank = Blaze.getData(after).rank - 1;
+			} else if(!after) {
+				//if it was dragged into the last position grab the
+				//  previous element's data context and add one to the rank
+				newRank = Blaze.getData(before).rank + 1
+			} else{
+				//else take the average of the two ranks of the previous
+				// and next elements
+				newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+			}
+			//console.log("newRank:", newRank);
+
+			var elem = Blaze.getData(el);
+			var allQuestion = Session.get("allQuestion");
+			allQuestion[elem.i1] ['mainCatQuestion'] [elem.i2] ['rank'] = newRank;
+			//console.log("allQuestion:", allQuestion);
+			Session.set("allQuestion", allQuestion);
+		}
+	});
+
+	// child cat - sortable
+	$( "#selectedQues > li > div > ul.sub-accordion li.sub-categories" ).sortable({
+		items: "ul",
+		stop: function(e, ui) {
+			el = ui.item.get(0);
+			before = ui.item.prev().get(0);
+			after = ui.item.next().get(0);
+			if(!before) {
+				//if it was dragged into the first position grab the
+				// next element's data context and subtract one from the rank
+				newRank = Blaze.getData(after).rank - 1;
+			} else if(!after) {
+				//if it was dragged into the last position grab the
+				//  previous element's data context and add one to the rank
+				newRank = Blaze.getData(before).rank + 1
+			} else{
+				//else take the average of the two ranks of the previous
+				// and next elements
+				newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+			}
+			//console.log("newRank:", newRank);
+
+			var elem = Blaze.getData(el);
+			//console.log("elem:", elem);
+			var allQuestion = Session.get("allQuestion");
+			allQuestion[elem.i1] ['subCategory'] [elem.i2] ['rank'] = newRank;
+			//console.log("allQuestion:", allQuestion);
+			Session.set("allQuestion", allQuestion);
+		}
+	});
+
+	// child cat ques - sortable
+	$( "#selectedQues > li > div > ul.sub-accordion li.sub-categories ul.sub-accordion" ).sortable({
+		items: "li.child-cat",
+		stop: function(e, ui) {
+			el = ui.item.get(0);
+			before = ui.item.prev().get(0);
+			after = ui.item.next().get(0);
+			if(!before) {
+				//if it was dragged into the first position grab the
+				// next element's data context and subtract one from the rank
+				newRank = Blaze.getData(after).rank - 1;
+			} else if(!after) {
+				//if it was dragged into the last position grab the
+				//  previous element's data context and add one to the rank
+				newRank = Blaze.getData(before).rank + 1
+			} else{
+				//else take the average of the two ranks of the previous
+				// and next elements
+				newRank = (Blaze.getData(after).rank + Blaze.getData(before).rank)/2
+			}
+			//console.log("newRank:", newRank);
+
+			var elem = Blaze.getData(el);
+			//console.log("elem:", elem);
+			var allQuestion = Session.get("allQuestion");
+			allQuestion[elem.i1] ['subCategory'] [elem.i2] ['SubcatQuestions'] [elem.i3] ['rank'] = newRank;
+			Session.set("allQuestion", allQuestion);
+		}
+	});
 }
