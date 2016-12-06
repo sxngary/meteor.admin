@@ -62,14 +62,16 @@ Template.agreements.events({
     
     'click .deleteAgreement': function(event){
         var id = $(event.currentTarget).attr('id');
-        Meteor.call('deleteAgreementTemplate',id,function(err,res){
-            if(err){
-                console.log(err);
-            }else{
-                sAlert.closeAll();
-                sAlert.success('Record delete successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
-            }
-        });
+        if (confirm("Are you sure you want to delete Agreement?")) {
+            Meteor.call('deleteAgreementTemplate',id,function(err,res){
+                if(err){
+                    console.log(err);
+                }else{
+                    sAlert.closeAll();
+                    sAlert.success('Agreement successfully deleted!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
+                }
+            });
+        }
     },
     
     'click .statusAgreement': function(event){

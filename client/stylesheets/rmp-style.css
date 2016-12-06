@@ -437,6 +437,17 @@ a:focus{outline:none !important;}
 .sign-page .at-signin-link p a {
   color: #4286f7;
 }
+
+.capitalize{
+  text-transform: capitalize;
+}
+.uppercase{
+  text-transform: uppercase;
+}
+
+
+/********media css*********/
+
 /*sign in page*/
 @media(min-width: 1200px) and (max-width:1286px) {
 
