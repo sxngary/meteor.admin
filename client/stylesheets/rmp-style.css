@@ -445,6 +445,8 @@ a:focus{outline:none !important;}
   text-transform: uppercase;
 }
 
+table.dataTable thead .sorting_desc:after {display: none !important;}
+table.dataTable thead .sorting_asc:after {display: none !important;}
 
 /********media css*********/
 
