@@ -120,7 +120,7 @@ Template.questionForm.events({
 
             // delete removed answer
             var deleteAnswer = Session.get('deleteAnswer');
-            console.log('deleteAnswer:', deleteAnswer);
+            //console.log('deleteAnswer:', deleteAnswer);
             if (deleteAnswer && deleteAnswer.length) {
                 for (var i = 0; i < deleteAnswer.length; i++) {
                     Meteor.call('deleteAnswer', questionSess._id, deleteAnswer[i].ansId);
@@ -197,7 +197,7 @@ Template.questionForm.events({
         Meteor.call("fetchQuestions", id, function (error, questionData) {
             if (questionData) {
                 Session.set("questionSets", questionData);
-                console.log("questionData", questionData)
+                //console.log("questionData", questionData)
             } else {
                 Session.set("questionSets", undefined);
             }

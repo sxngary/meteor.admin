@@ -258,7 +258,7 @@ Template.questionnaire.helpers({
         
         Meteor.call('questionnaireListing', function (error, response) {
             if (error) {
-                console.log("Error calling questionnaireListing()");
+                //console.log("Error calling questionnaireListing()");
             }
             //console.log(response,'response');
             Session.set("questionnaireListing", response);
@@ -298,7 +298,7 @@ Template.questionnaire.helpers({
                 }).fetch();
             }
             if (questionDef && questionDef.length > 0 && questionCat && questionCat.length > 0) {
-                console.log('set questionValue');
+                //console.log('set questionValue');
                 Session.set("questionValue", {
                     questionDef: questionDef[0].en,
                     questionCat: questionCat[0].en,

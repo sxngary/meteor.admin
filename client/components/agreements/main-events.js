@@ -65,7 +65,7 @@ Template.agreements.events({
         if (confirm("Are you sure you want to delete Agreement?")) {
             Meteor.call('deleteAgreementTemplate',id,function(err,res){
                 if(err){
-                    console.log(err);
+                    //console.log(err);
                 }else{
                     sAlert.closeAll();
                     sAlert.success('Agreement successfully deleted!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
@@ -79,7 +79,7 @@ Template.agreements.events({
         var status = $(event.currentTarget).attr('data-status');
         Meteor.call('statusAgreementTemplate',id,status,function(err,res){
             if(err){
-                console.log(err);
+                //console.log(err);
             }else{
                 sAlert.closeAll();
                 sAlert.success(res+' Status change successfully!', {effect: 'bouncyflip', position: 'top-right', timeout: 1000, onRouteClose: true, stack: false, offset: '80px'});
