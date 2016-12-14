@@ -40,3 +40,6 @@ input.parsley-error[data-parsley-id], textarea.parsley-error[data-parsley-id] {
 .sub-accordion .collapsible { margin: 0;}
 
 .questions-accordion .accordion-title-sml { margin-bottom: 5px;}
+
+/*-----CK editor------*/
+#cke_agreement_body{margin-top: 45px;}

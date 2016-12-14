@@ -12,8 +12,13 @@ Template.agreements.events({
         var agreementsData = Agreements.findOne({_id:id});
         if (agreementsData) {
             Session.set('agreementData',agreementsData);
-            $('#agreement_body').froalaEditor('html.set', agreementsData.agreementBody);
-            $('#agreement_body').froalaEditor('events.disableBlur');
+            //$('#agreement_body').froalaEditor('html.set', agreementsData.agreementBody);
+            //$('#agreement_body').froalaEditor('events.disableBlur');
+            CKEDITOR.instances.agreement_body.setData( agreementsData.agreementBody, {
+                callback: function() {
+                    this.checkDirty(); // true
+                }
+            } );
             $('#openAgreement').modal('open');
         }
     },
