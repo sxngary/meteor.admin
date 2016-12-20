@@ -1,3 +1,3 @@
-# Regulated pharma admin portal.
+# Meteor admin portal.
 
 
